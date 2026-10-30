@@ -47,4 +47,20 @@ class FamilyTree {
             if (parent2Id && this.nodes[parent2Id]) this.nodes[parent2Id].children.push(childId);
         }
     }
+
+    // 1. Ağacı JSON olarak bilgisayara indirme (Export)
+    FamilyTree.prototype.exportToJsonFile = function() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.nodes, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "soy_agaci.json");
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+    };
+    
+    // 2. JSON dosyasından ağacı yükleme (Import)
+    FamilyTree.prototype.loadFromJsonData = function(jsonData) {
+        this.nodes = jsonData;
+    };
 }
