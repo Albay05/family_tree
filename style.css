@@ -1,77 +1,87 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+/* Mevcut CSS'in üzerine veya yerine ekleyebilirsin */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { background-color: #f4f4f9; overflow: hidden; }
 
-body {
-    background-color: #f4f4f9;
-    overflow: hidden; /* Dışarı taşan kısımlar görünmesin */
-}
-
-/* Giriş Ekranı */
+/* GİRİŞ EKRANI VE ŞIK KART TASARIMI */
 #intro-screen {
     height: 100vh;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #2c3e50;
-    color: white;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Şık bir mavi arka plan */
 }
 
-#intro-screen button {
-    margin: 10px;
-    padding: 15px 30px;
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: #3498db;
-    color: white;
-    transition: background 0.3s;
+.intro-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 50px 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 500px;
 }
 
-#intro-screen button:hover {
-    background-color: #2980b9;
-}
+.intro-card h1 { color: #2c3e50; margin-bottom: 15px; font-size: 32px; }
+.intro-card p { color: #7f8c8d; margin-bottom: 30px; line-height: 1.6; }
 
-/* Ağaç Düzlemi */
+/* BUTONLAR */
+.btn {
+    padding: 12px 24px; font-size: 15px; font-weight: bold;
+    border: none; border-radius: 8px; cursor: pointer;
+    transition: all 0.2s ease; margin: 5px;
+}
+.btn.primary { background-color: #3498db; color: white; }
+.btn.primary:hover { background-color: #2980b9; transform: translateY(-2px); }
+.btn.secondary { background-color: #ecf0f1; color: #2c3e50; }
+.btn.secondary:hover { background-color: #bdc3c7; }
+.btn.success { background-color: #27ae60; color: white; }
+.btn.danger { background-color: #e74c3c; color: white; }
+
+/* AĞAÇ DÜZLEMİ (CANVAS) */
 #tree-container {
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    cursor: grab; /* Sürükleme imleci */
-    background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
-    background-size: 20px 20px; /* Noktalı arka plan defter deseni */
+    width: 100vw; height: 100vh; position: relative; cursor: grab;
+    background-color: #fafafa;
+    background-image: radial-gradient(#ccc 1px, transparent 1px);
+    background-size: 25px 25px;
 }
+#tree-container:active { cursor: grabbing; }
+#tree-canvas { position: absolute; top: 0; left: 0; width: 0; height: 0; transform-origin: 0 0; }
 
-#tree-container:active {
-    cursor: grabbing; /* Tıklanılıp çekilirken kapalı el imleci */
-}
-
-#tree-canvas {
+/* KİŞİ KARTI (NODE YAPI TAŞI) */
+.person-card {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 0;
-    transform-origin: 0 0; /* Yakınlaştırmanın sol üstten hesaplanması için */
+    width: 160px;
+    background: white;
+    border: 2px solid #bdc3c7;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    cursor: default; /* Sürükleme ile karışmaması için */
+    /* Canvasın içinde farenin tıklamasını yakalamak için önemli: */
+    pointer-events: auto; 
 }
+.person-card h3 { font-size: 16px; color: #2c3e50; margin-bottom: 5px; }
+.person-card p { font-size: 12px; color: #7f8c8d; }
 
-/* UI Kontrolleri (Ağaç Ekranındaki Butonlar) */
-#ui-controls {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-}
+/* UI KONTROLLERİ */
+#ui-controls { position: absolute; top: 20px; left: 20px; z-index: 10; }
 
-#ui-controls button {
-    padding: 10px 15px;
-    background-color: #27ae60;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* MODAL (AÇILIR PENCERE) */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 100; backdrop-filter: blur(3px);
 }
+.modal.hidden { display: none; }
+.modal-content {
+    background: white; padding: 30px; border-radius: 12px;
+    width: 400px; box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+.modal-content h2 { margin-bottom: 20px; color: #2c3e50; }
+.form-group { display: flex; gap: 10px; margin-bottom: 15px; }
+.modal-content input, .modal-content textarea {
+    width: 100%; padding: 10px; margin-bottom: 10px;
+    border: 1px solid #ddd; border-radius: 6px; font-size: 14px;
+}
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
