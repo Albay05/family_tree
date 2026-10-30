@@ -64,16 +64,32 @@ body { background-color: #f4f4f9; overflow: hidden; }
 .person-card p { font-size: 12px; color: #7f8c8d; }
 
 /* UI KONTROLLERİ */
-#ui-controls { position: absolute; top: 20px; left: 20px; z-index: 10; }
+#ui-controls {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+}
 
 /* MODAL (AÇILIR PENCERE) */
 .modal {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.6);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 100; backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Her şeyin üzerinde görünmesi için artırıldı */
+    backdrop-filter: blur(3px);
 }
-.modal.hidden { display: none; }
+.modal.hidden {
+    display: none !important;
+}
 .modal-content {
     background: white; padding: 30px; border-radius: 12px;
     width: 400px; box-shadow: 0 15px 30px rgba(0,0,0,0.3);
