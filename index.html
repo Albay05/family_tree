@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soy Ağacı Oluşturucu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- GİRİŞ EKRANI -->
+    <div id="intro-screen">
+        <h1>Soy Ağacı Oluşturucu</h1>
+        <div class="buttons">
+            <button id="btn-new-tree">Yeni Ağaç Oluştur</button>
+            <button id="btn-load-tree">Mevcut Ağacı Yükle</button>
+            <input type="file" id="file-input" accept=".json" style="display: none;">
+        </div>
+    </div>
+
+    <!-- AĞAÇ DÜZLEMİ (SONSUZ CANVAS) -->
+    <div id="tree-container" style="display: none;">
+        <div id="tree-canvas">
+            <!-- Node'lar (Kişiler) ve SVG çizgileri buraya JavaScript ile eklenecek -->
+        </div>
+        
+        <!-- Arayüz Üstü Kontroller -->
+        <div id="ui-controls">
+            <button id="btn-export">Ağacı Kaydet (.json)</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

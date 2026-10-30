@@ -1,0 +1,77 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f4f9;
+    overflow: hidden; /* Dışarı taşan kısımlar görünmesin */
+}
+
+/* Giriş Ekranı */
+#intro-screen {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #2c3e50;
+    color: white;
+}
+
+#intro-screen button {
+    margin: 10px;
+    padding: 15px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #3498db;
+    color: white;
+    transition: background 0.3s;
+}
+
+#intro-screen button:hover {
+    background-color: #2980b9;
+}
+
+/* Ağaç Düzlemi */
+#tree-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    cursor: grab; /* Sürükleme imleci */
+    background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
+    background-size: 20px 20px; /* Noktalı arka plan defter deseni */
+}
+
+#tree-container:active {
+    cursor: grabbing; /* Tıklanılıp çekilirken kapalı el imleci */
+}
+
+#tree-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    transform-origin: 0 0; /* Yakınlaştırmanın sol üstten hesaplanması için */
+}
+
+/* UI Kontrolleri (Ağaç Ekranındaki Butonlar) */
+#ui-controls {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+#ui-controls button {
+    padding: 10px 15px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
