@@ -10,26 +10,55 @@
 
     <!-- GİRİŞ EKRANI -->
     <div id="intro-screen">
-        <h1>Soy Ağacı Oluşturucu</h1>
-        <div class="buttons">
-            <button id="btn-new-tree">Yeni Ağaç Oluştur</button>
-            <button id="btn-load-tree">Mevcut Ağacı Yükle</button>
-            <input type="file" id="file-input" accept=".json" style="display: none;">
+        <div class="intro-card">
+            <h1>Ailenizin Mirası</h1>
+            <p>Köklerinizi keşfedin, geçmişten geleceğe uzanan hikayenizi tek bir düzlemde tasarlayıp cihazınızda güvenle saklayın.</p>
+            <div class="buttons">
+                <button id="btn-new-tree" class="btn primary">Yeni Ağaç Oluştur</button>
+                <button id="btn-load-tree" class="btn secondary">Mevcut Ağacı Yükle</button>
+                <input type="file" id="file-input" accept=".json" style="display: none;">
+            </div>
         </div>
     </div>
 
     <!-- AĞAÇ DÜZLEMİ (SONSUZ CANVAS) -->
     <div id="tree-container" style="display: none;">
         <div id="tree-canvas">
-            <!-- Node'lar (Kişiler) ve SVG çizgileri buraya JavaScript ile eklenecek -->
+            <!-- Düğümler (Kartlar) buraya eklenecek -->
         </div>
         
         <!-- Arayüz Üstü Kontroller -->
         <div id="ui-controls">
-            <button id="btn-export">Ağacı Kaydet (.json)</button>
+            <button id="btn-add-first" class="btn primary">+ İlk Kişiyi Ekle</button>
+            <button id="btn-export" class="btn secondary">Ağacı İndir (.json)</button>
         </div>
     </div>
 
+    <!-- KİŞİ EKLEME MODALI (GİZLİ) -->
+    <div id="node-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Kişi Bilgileri</h2>
+            <div class="form-group">
+                <input type="text" id="m-fname" placeholder="İsim" required>
+                <input type="text" id="m-lname" placeholder="Soyisim">
+            </div>
+            <div class="form-group">
+                <label>Doğum</label>
+                <input type="date" id="m-bdate">
+                <label>Vefat</label>
+                <input type="date" id="m-ddate">
+            </div>
+            <input type="text" id="m-bplace" placeholder="Doğum Yeri">
+            <textarea id="m-note" placeholder="Notlar..." rows="3"></textarea>
+            
+            <div class="modal-actions">
+                <button id="btn-cancel-modal" class="btn danger">İptal</button>
+                <button id="btn-save-modal" class="btn success">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="node.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
