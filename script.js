@@ -97,3 +97,60 @@ function renderPersonCard(person, x, y) {
 
     document.getElementById('tree-canvas').appendChild(card);
 }
+
+// --- ANA EKRANA DÖNME MANTIĞI ---
+const btnBack = document.getElementById('btn-back');
+
+btnBack.addEventListener('click', () => {
+    // Ağaçta eleman var mı kontrol et
+    const nodeCount = Object.keys(myTree.nodes).length;
+
+    if (nodeCount > 0) {
+        const confirmLeave = confirm(
+            "Oluşturduğunuz soy ağacı kaydedilmedi! Ana ekrana dönerseniz mevcut verileri kaybedebilirsiniz.\n\nYine de çıkmak istiyor musunuz?"
+        );
+        if (!confirmLeave) return; // Kullanıcı vazgeçtiyse işlem yapma
+    }
+
+    // Ağacı sıfırla ve DOM'u temizle
+    resetTreeState();
+
+    // Ekran geçişi yap
+    treeContainer.style.display = 'none';
+    introScreen.style.display = 'flex';
+});
+
+// Ağacı ve arayüzü sıfırlayan yardımcı fonksiyon
+function resetTreeState() {
+    myTree = new FamilyTree(); // Mantıksal veri yapısını sıfırla
+    document.getElementById('tree-canvas').innerHTML = ''; // Canvas üzerindeki kartları sil
+    btnAddFirst.style.display = 'inline-block'; // 'İlk Kişiyi Ekle' butonunu tekrar göster
+    
+    // Pan/Zoom konumlarını sıfırla
+    pointX = 0;
+    pointY = 0;
+    scale = 1;
+    updateTransform();
+}
+
+
+// --- MODAL AÇMA/KAPATMA VE DÜĞÜM EKLEME (GARANTİ CATCH) ---
+// Tıklama olayını doğrudan DOM üzerinden güvene alıyoruz
+btnAddFirst.onclick = function() {
+    nodeModal.classList.remove('hidden');
+};
+
+btnCancelModal.onclick = function() {
+    nodeModal.classList.add('hidden');
+    clearModalFields();
+};
+
+// JSON İndirme Butonu Bağlantısı
+const btnExport = document.getElementById('btn-export');
+btnExport.addEventListener('click', () => {
+    if (Object.keys(myTree.nodes).length === 0) {
+        alert("Kaydedilecek bir ağaç bulunamadı!");
+        return;
+    }
+    myTree.exportToJsonFile();
+});
