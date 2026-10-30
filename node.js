@@ -1,5 +1,6 @@
+// Bir kişiyi ve onun özelliklerini/ilişkilerini temsil eden sınıf
 class PersonNode {
-    constructor(id, firstName, lastName, birthDate, deathDate, birthPlace, note = "") {
+    constructor(id, firstName, lastName, birthDate, deathDate, birthPlace, note = "", x = 0, y = 0) {
         this.id = id; 
         this.firstName = firstName;
         this.lastName = lastName;
@@ -8,20 +9,37 @@ class PersonNode {
         this.birthPlace = birthPlace;
         this.note = note;
         
+        // Ekranda çizileceği koordinatlar (Kaydedip yüklerken konumu hatırlamak için)
+        this.x = x;
+        this.y = y;
+        
         // Bağlantılar (Graph kenarları)
-        this.parents = [];  // Çocuğun ebeveynleri (Genelde 2 ID)
-        this.children = []; // Kişinin çocukları
+        this.parents = [];  // Ebeveynlerin ID'leri
+        this.children = []; // Kişinin çocuklarının ID'leri
         this.partners = []; // Eş(ler)inin ID'leri
     }
 }
 
+// Tüm ağacı ve veri yönetimini sağlayan sınıf
 class FamilyTree {
     constructor() {
-        this.nodes = {}; 
+        this.nodes = {}; // Tüm node'ları ID'sine göre sözlük yapısında tutar
     }
 
     addNode(node) {
         this.nodes[node.id] = node;
+    }
+
+    // Ebeveyn-Çocuk ilişkisi kurma
+    addConnection(parentId, childId) {
+        if(this.nodes[parentId] && this.nodes[childId]) {
+            if (!this.nodes[parentId].children.includes(childId)) {
+                this.nodes[parentId].children.push(childId);
+            }
+            if (!this.nodes[childId].parents.includes(parentId)) {
+                this.nodes[childId].parents.push(parentId);
+            }
+        }
     }
 
     // Eş/Partner ilişkisi kurma
@@ -36,20 +54,8 @@ class FamilyTree {
         }
     }
 
-    // Çocuğu iki ebeveyne birden bağlama
-    addChildToPartners(childId, parent1Id, parent2Id) {
-        if(this.nodes[childId]) {
-            // Ebeveynleri çocuğa ekle
-            this.nodes[childId].parents = [parent1Id, parent2Id].filter(id => id != null);
-            
-            // Çocuğu ebeveynlere ekle
-            if (parent1Id && this.nodes[parent1Id]) this.nodes[parent1Id].children.push(childId);
-            if (parent2Id && this.nodes[parent2Id]) this.nodes[parent2Id].children.push(childId);
-        }
-    }
-
-    // 1. Ağacı JSON olarak bilgisayara indirme (Export)
-    FamilyTree.prototype.exportToJsonFile = function() {
+    // Ağacı JSON olarak bilgisayara indirme (Export)
+    exportToJsonFile() {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.nodes, null, 2));
         const downloadAnchor = document.createElement('a');
         downloadAnchor.setAttribute("href", dataStr);
@@ -57,10 +63,10 @@ class FamilyTree {
         document.body.appendChild(downloadAnchor);
         downloadAnchor.click();
         downloadAnchor.remove();
-    };
-    
-    // 2. JSON dosyasından ağacı yükleme (Import)
-    FamilyTree.prototype.loadFromJsonData = function(jsonData) {
+    }
+
+    // JSON dosyasından ağacı yükleme (Import)
+    loadFromJsonData(jsonData) {
         this.nodes = jsonData;
-    };
+    }
 }

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soy Ağacı Oluşturucu</title>
+    <title>Modern Soy Ağacı</title>
+    <!-- Modern Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,8 +13,9 @@
     <!-- GİRİŞ EKRANI -->
     <div id="intro-screen">
         <div class="intro-card">
+            <div class="glow-effect"></div>
             <h1>Ailenizin Mirası</h1>
-            <p>Köklerinizi keşfedin, geçmişten geleceğe uzanan hikayenizi tek bir düzlemde tasarlayıp cihazınızda güvenle saklayın.</p>
+            <p>Köklerinizi keşfedin, geçmişten geleceğe uzanan hikayenizi modern bir düzlemde tasarlayıp cihazınızda saklayın.</p>
             <div class="buttons">
                 <button id="btn-new-tree" class="btn primary">Yeni Ağaç Oluştur</button>
                 <button id="btn-load-tree" class="btn secondary">Mevcut Ağacı Yükle</button>
@@ -22,36 +25,41 @@
     </div>
 
     <!-- AĞAÇ DÜZLEMİ (SONSUZ CANVAS) -->
-<div id="tree-container" style="display: none;">
-    <div id="tree-canvas"></div>
-    
-    <!-- UI Kontrolleri -->
-    <div id="ui-controls">
-        <button id="btn-back" class="btn danger">← Ana Ekrana Dön</button>
-        <button id="btn-add-first" class="btn primary">+ İlk Kişiyi Ekle</button>
-        <button id="btn-export" class="btn secondary">Ağacı İndir (.json)</button>
+    <div id="tree-container" style="display: none;">
+        <div id="tree-canvas">
+            <svg id="tree-edges"></svg>
+        </div>
+        
+        <div id="ui-controls">
+            <button id="btn-back" class="btn danger">← Ana Ekran</button>
+            <button id="btn-add-first" class="btn primary">+ İlk Kişiyi Ekle</button>
+            <button id="btn-export" class="btn secondary">Ağacı İndir (.json)</button>
+        </div>
     </div>
-</div>
 
-    <!-- KİŞİ EKLEME MODALI (GİZLİ) -->
+    <!-- KİŞİ EKLEME/DÜZENLEME MODALI -->
     <div id="node-modal" class="modal hidden">
         <div class="modal-content">
-            <h2>Kişi Bilgileri</h2>
+            <h2 id="modal-title">Kişi Bilgileri</h2>
             <div class="form-group">
                 <input type="text" id="m-fname" placeholder="İsim" required>
                 <input type="text" id="m-lname" placeholder="Soyisim">
             </div>
             <div class="form-group">
-                <label>Doğum</label>
-                <input type="date" id="m-bdate">
-                <label>Vefat</label>
-                <input type="date" id="m-ddate">
+                <div class="input-col">
+                    <label>Doğum</label>
+                    <input type="date" id="m-bdate">
+                </div>
+                <div class="input-col">
+                    <label>Vefat</label>
+                    <input type="date" id="m-ddate">
+                </div>
             </div>
             <input type="text" id="m-bplace" placeholder="Doğum Yeri">
-            <textarea id="m-note" placeholder="Notlar..." rows="3"></textarea>
+            <textarea id="m-note" placeholder="Ek Notlar (İsteğe Bağlı)..." rows="3"></textarea>
             
             <div class="modal-actions">
-                <button id="btn-cancel-modal" class="btn danger">İptal</button>
+                <button id="btn-cancel-modal" class="btn secondary">İptal</button>
                 <button id="btn-save-modal" class="btn success">Kaydet</button>
             </div>
         </div>
