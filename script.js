@@ -1,82 +1,99 @@
-// --- EKRAN GEÇİŞLERİ ---
-const introScreen = document.getElementById('intro-screen');
-const treeContainer = document.getElementById('tree-container');
-const btnNewTree = document.getElementById('btn-new-tree');
-const btnLoadTree = document.getElementById('btn-load-tree');
-const fileInput = document.getElementById('file-input');
+// --- VERİ MODELİ BAŞLATMA ---
+let myTree = new FamilyTree(); 
 
-btnNewTree.addEventListener('click', () => {
-    introScreen.style.display = 'none';
-    treeContainer.style.display = 'block';
-    // Burada yeni, boş bir FamilyTree objesi oluşturacağız (Aşama 1'deki kod)
+// --- MODAL VE BUTON REFERANSLARI ---
+const btnAddFirst = document.getElementById('btn-add-first');
+const nodeModal = document.getElementById('node-modal');
+const btnCancelModal = document.getElementById('btn-cancel-modal');
+const btnSaveModal = document.getElementById('btn-save-modal');
+
+// Girdi Referansları
+const mFname = document.getElementById('m-fname');
+const mLname = document.getElementById('m-lname');
+const mBdate = document.getElementById('m-bdate');
+const mDdate = document.getElementById('m-ddate');
+const mBplace = document.getElementById('m-bplace');
+const mNote = document.getElementById('m-note');
+
+// Modalı Aç/Kapat
+btnAddFirst.addEventListener('click', () => {
+    nodeModal.classList.remove('hidden');
 });
 
-btnLoadTree.addEventListener('click', () => {
-    fileInput.click(); // Gizli input'u tetikler
+btnCancelModal.addEventListener('click', () => {
+    nodeModal.classList.add('hidden');
+    clearModalFields();
 });
 
-fileInput.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        // Burada dosyayı okuyup sisteme yükleyeceğiz (Aşama 2'deki kod)
-        introScreen.style.display = 'none';
-        treeContainer.style.display = 'block';
+function clearModalFields() {
+    mFname.value = ''; mLname.value = ''; mBdate.value = '';
+    mDdate.value = ''; mBplace.value = ''; mNote.value = '';
+}
+
+// KAYDET BUTONU - Düğüm Oluşturma
+btnSaveModal.addEventListener('click', () => {
+    if (mFname.value.trim() === '') {
+        alert("İsim alanı zorunludur!");
+        return;
     }
+
+    // Benzersiz ID üret (Zaman damgası + rastgele sayı)
+    const uniqueId = 'node-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+
+    // node.js içindeki Sınıfı kullanarak kişiyi oluştur
+    const newPerson = new PersonNode(
+        uniqueId,
+        mFname.value,
+        mLname.value,
+        mBdate.value,
+        mDdate.value,
+        mBplace.value,
+        mNote.value
+    );
+
+    // Ağaca kaydet
+    myTree.addNode(newPerson);
+
+    // Ekrana çizdir (Şimdilik ekranın ortasına yakın bir yere atıyoruz)
+    // İleride algoritma ile otomatik koordinat vereceğiz.
+    const startX = (window.innerWidth / 2) - 80; // 80, kart genişliğinin yarısı
+    const startY = (window.innerHeight / 2) - 50;
+    
+    renderPersonCard(newPerson, startX, startY);
+
+    // İlk kişi eklendikten sonra 'İlk Kişiyi Ekle' butonunu gizleyebiliriz
+    btnAddFirst.style.display = 'none';
+
+    nodeModal.classList.add('hidden');
+    clearModalFields();
 });
 
-// --- SONSUZ DÜZLEM (PAN & ZOOM) MOTORU ---
-const canvas = document.getElementById('tree-canvas');
-
-let scale = 1;
-let panning = false;
-let pointX = 0; // Canvas'ın X eksenindeki konumu
-let pointY = 0; // Canvas'ın Y eksenindeki konumu
-let startX = 0;
-let startY = 0;
-
-// Sürüklemeye başlama (Fareye basılı tutma)
-treeContainer.addEventListener('mousedown', function(e) {
-    e.preventDefault();
-    startX = e.clientX - pointX;
-    startY = e.clientY - pointY;
-    panning = true;
-});
-
-// Sürüklemeyi bırakma
-window.addEventListener('mouseup', function() {
-    panning = false;
-});
-
-// Sürükleme (Fareyi hareket ettirme)
-treeContainer.addEventListener('mousemove', function(e) {
-    if (!panning) return;
-    pointX = (e.clientX - startX);
-    pointY = (e.clientY - startY);
-    updateTransform();
-});
-
-// Yakınlaştırma / Uzaklaştırma (Fare tekerleği)
-treeContainer.addEventListener('wheel', function(e) {
-    e.preventDefault();
+// GÖRSELLEŞTİRME: Kişi Kartını Canvas'a Ekleme
+function renderPersonCard(person, x, y) {
+    const card = document.createElement('div');
+    card.classList.add('person-card');
+    card.id = person.id;
     
-    // Farenin canvas üzerindeki mevcut koordinatlarını hesapla
-    const xs = (e.clientX - pointX) / scale;
-    const ys = (e.clientY - pointY) / scale;
-    
-    // Yön tespiti (Yukarı/Aşağı)
-    const delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY);
-    
-    // Zoom çarpanı
-    (delta > 0) ? (scale *= 1.1) : (scale /= 1.1);
-    
-    // Canvasın yeni konumunu farenin olduğu yere doğru kaydır (Merkezleme)
-    pointX = e.clientX - xs * scale;
-    pointY = e.clientY - ys * scale;
-    
-    updateTransform();
-}, { passive: false });
+    // Canvas içindeki konumu (Absolute Positioning)
+    card.style.left = `${x}px`;
+    card.style.top = `${y}px`;
 
-// DOM Manipülasyonu ile CSS güncelleyen fonksiyon
-function updateTransform() {
-    canvas.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+    // İçeriği doldur
+    // Sadece doğum yılı göstermek için ufak bir ayarlama:
+    const birthYear = person.birthDate ? person.birthDate.split('-')[0] : '?';
+    const deathYear = person.deathDate ? person.deathDate.split('-')[0] : '';
+    const dateText = (person.birthDate || person.deathDate) ? `${birthYear} - ${deathYear}` : '';
+
+    card.innerHTML = `
+        <h3>${person.firstName} ${person.lastName}</h3>
+        <p>${dateText}</p>
+        <p><i>${person.birthPlace}</i></p>
+    `;
+
+    // Sürükleme esnasında kartın tıklamasını durdurmamak için olayı engelle
+    card.addEventListener('mousedown', (e) => {
+        e.stopPropagation(); // Pan (canvas sürükleme) işlemini bu eleman üzerinde iptal et
+    });
+
+    document.getElementById('tree-canvas').appendChild(card);
 }
