@@ -1,17 +1,26 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Soy Ağacı</title>
-    <!-- Modern Font: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Yüksek Çözünürlüklü Resim Çıktısı İçin Kütüphane -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
     <!-- GİRİŞ EKRANI -->
     <div id="intro-screen">
+        <div class="theme-switch-wrapper intro-theme-switch">
+            <span class="theme-icon">☀️</span>
+            <label class="theme-switch" for="checkbox-theme-intro">
+                <input type="checkbox" id="checkbox-theme-intro" class="theme-toggle-input" checked />
+                <div class="slider round"></div>
+            </label>
+            <span class="theme-icon">🌙</span>
+        </div>
         <div class="intro-card">
             <div class="glow-effect"></div>
             <h1>Ailenizin Mirası</h1>
@@ -22,18 +31,37 @@
                 <input type="file" id="file-input" accept=".json" style="display: none;">
             </div>
         </div>
+        <div class="footer-credit">made by albay05</div>
     </div>
 
-    <!-- AĞAÇ DÜZLEMİ (SONSUZ CANVAS) -->
-    <div id="tree-container" style="display: none;">
+    <!-- AĞAÇ DÜZLEMİ -->
+    <div id="tree-container" class="tree-empty" style="display: none;">
         <div id="tree-canvas">
-            <svg id="tree-edges"></svg>
+            <svg id="tree-edges" width="50000" height="50000" style="position: absolute; top: 0; left: 0; overflow: visible; pointer-events: none;"></svg>
         </div>
         
         <div id="ui-controls">
-            <button id="btn-back" class="btn danger">← Ana Ekran</button>
-            <button id="btn-add-first" class="btn primary">+ İlk Kişiyi Ekle</button>
-            <button id="btn-export" class="btn secondary">Ağacı İndir (.json)</button>
+            <div class="left-controls">
+                <button id="btn-back" class="btn danger">← Ana Ekran</button>
+                <input type="text" id="tree-name-input" class="tree-name" placeholder="Soy Ağacı Adı" value="Benim Soy Ağacım">
+            </div>
+            <div class="right-controls">
+                <!-- TEMA DEĞİŞTİRİCİ BURAYA TAŞINDI -->
+                <div class="theme-switch-wrapper">
+                    <span class="theme-icon">☀️</span>
+                    <label class="theme-switch" for="checkbox-theme">
+                        <input type="checkbox" id="checkbox-theme" class="theme-toggle-input" checked />
+                        <div class="slider round"></div>
+                    </label>
+                    <span class="theme-icon">🌙</span>
+                </div>
+                <button id="btn-save-menu" class="btn primary">Ağacı Kaydet / Paylaş</button>
+            </div>
+        </div>
+        
+        <div id="null-node" class="null-node">
+            <div class="plus-icon">+</div>
+            <div class="indicator-text">Soy Ağacını Başlat — İlk Kişiyi Ekle</div>
         </div>
     </div>
 
@@ -41,6 +69,18 @@
     <div id="node-modal" class="modal hidden">
         <div class="modal-content">
             <h2 id="modal-title">Kişi Bilgileri</h2>
+            
+            <!-- Cinsiyet Seçici (Slider) -->
+            <div class="gender-toggle">
+                <input type="radio" id="g-male" name="gender" value="M" checked>
+                <label for="g-male" class="gender-label male-lbl">Erkek</label>
+                
+                <input type="radio" id="g-female" name="gender" value="F">
+                <label for="g-female" class="gender-label female-lbl">Kadın</label>
+                
+                <div class="gender-slider"></div>
+            </div>
+
             <div class="form-group">
                 <input type="text" id="m-fname" placeholder="İsim" required>
                 <input type="text" id="m-lname" placeholder="Soyisim">
@@ -62,6 +102,50 @@
                 <button id="btn-cancel-modal" class="btn secondary">İptal</button>
                 <button id="btn-save-modal" class="btn success">Kaydet</button>
             </div>
+        </div>
+    </div>
+
+    <!-- UNIFIED KAYDETME MENÜSÜ -->
+    <div id="save-menu-modal" class="modal hidden">
+        <div class="modal-content text-center">
+            <h2>Nasıl Kaydetmek İstersiniz?</h2>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">
+                Daha sonra düzenlemeye devam etmek için JSON formatını, sevdiklerinizle paylaşmak için Fotoğraf (PNG) formatını seçin.
+            </p>
+            <div class="buttons" style="flex-direction: column; gap: 10px;">
+                <button id="btn-export-json" class="btn primary" style="width: 100%;">Gelecekte Düzenlemek İçin Kaydet (.json)</button>
+                <button id="btn-export-image" class="btn success" style="width: 100%;">Fotoğraf Olarak İndir / Paylaş (.png)</button>
+                <button onclick="document.getElementById('save-menu-modal').classList.add('hidden')" class="btn secondary" style="width: 100%; margin-top: 10px;">Vazgeç</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOTOĞRAF PAYLAŞMA / ÖNİZLEME MODALI -->
+    <div id="image-preview-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 800px; width: 90%;">
+            <h2>Ağacınız Hazır!</h2>
+            <div class="image-preview-container">
+                <img id="preview-image" src="" alt="Soy Ağacı Önizleme">
+            </div>
+            <div class="modal-actions" style="justify-content: center; gap: 15px; margin-top: 20px;">
+                <button id="btn-copy-img" class="btn secondary">Panoya Kopyala</button>
+                <button id="btn-share-img" class="btn primary">Paylaş</button>
+                <button id="btn-download-img" class="btn success">Cihaza Kaydet</button>
+                <button onclick="document.getElementById('image-preview-modal').classList.add('hidden')" class="btn danger">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- İLİŞKİ SEÇİM MODALI (Sürükle-Bırak için) -->
+    <div id="relation-modal" class="modal hidden">
+        <div class="modal-content relation-content">
+            <h2>İlişki Türü Seçin</h2>
+            <div class="relation-options">
+                <button class="btn primary" onclick="confirmRelationDrop('parent')">Ebeveyn Olarak</button>
+                <button class="btn success" onclick="confirmRelationDrop('partner')">Eş Olarak</button>
+                <button class="btn secondary" onclick="confirmRelationDrop('child')">Çocuk Olarak</button>
+            </div>
+            <button class="btn danger cancel-rel-btn" onclick="cancelRelationDrop()">İptal</button>
         </div>
     </div>
 
