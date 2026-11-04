@@ -33,7 +33,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm install --legacy-peer-deps
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
