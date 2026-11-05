@@ -5,7 +5,7 @@ import type { Gender } from '../types/tree';
 import { Check, X } from 'lucide-react';
 
 export default function ModalManager() {
-  const { activeModal, closeModal, selectedNodeId, nodes, treeName, addPerson, editPerson, openModal, previewImageUrl, setPreviewImageUrl, language } = useTreeStore();
+  const { activeModal, closeModal, selectedNodeId, relationType, nodes, treeName, addPerson, editPerson, openModal, previewImageUrl, setPreviewImageUrl, language } = useTreeStore();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [birthDate, setBirthDate] = useState('');
@@ -25,9 +25,19 @@ export default function ModalManager() {
       }
     } else if (activeModal === 'ADD') {
       setFirstName(''); setLastName(''); setBirthDate(''); setDeathDate('');
-      setBirthPlace(''); setNote(''); setGender('M');
+      setBirthPlace(''); setNote(''); 
+      
+      // EŞ EKLENİRKEN CİNSİYETİ KARŞI CİNSE GÖRE OTOMATİK AYARLA
+      let defaultGender: Gender = 'M';
+      if (relationType === 'partner' && selectedNodeId) {
+        const parentNode = nodes.find(n => n.id === selectedNodeId);
+        if (parentNode) {
+          defaultGender = parentNode.data.gender === 'M' ? 'F' : 'M';
+        }
+      }
+      setGender(defaultGender);
     }
-  }, [activeModal, selectedNodeId, nodes]);
+  }, [activeModal, selectedNodeId, relationType, nodes]);
 
   if (!activeModal) return null;
 
