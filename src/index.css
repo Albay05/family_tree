@@ -572,3 +572,87 @@ body {
   stroke: var(--tree-edge-color) !important;
   stroke-width: 3.5px !important;
 }
+
+/* ==========================================
+   REACT FLOW MODERN KONTROLLER (ZOOM KUTUSU)
+   ========================================== */
+.react-flow__controls {
+  background: var(--card-bg) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px var(--shadow-color) !important;
+  padding: 6px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.react-flow__controls button {
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  border-radius: 8px !important;
+  border-bottom: none !important;
+  fill: var(--text-main) !important;
+  transition: all 0.3s ease;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.react-flow__controls button:hover {
+  background: var(--btn-primary-from) !important;
+  fill: white !important;
+}
+
+/* ==========================================
+   MOBİL (RESPONSIVE) TASARIM KURALLARI
+   ========================================== */
+@media (max-width: 768px) {
+  /* Üst Bar (TopBar) Mobil Düzeni */
+  #ui-controls {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .control-pill {
+    width: 100%;
+    justify-content: center;
+  }
+  .tree-name {
+    width: 100%;
+    min-width: 150px;
+  }
+  /* Butonlardaki uzun yazıları gizle, sadece ikon kalsın */
+  .save-text, .lang-text {
+    display: none;
+  }
+  
+  /* Giriş Ekranı Mobil */
+  .intro-card {
+    padding: 30px 25px;
+  }
+  .intro-card h1 {
+    font-size: 28px;
+  }
+  .intro-card p {
+    font-size: 14px;
+  }
+  
+  /* Modallar Mobil */
+  .modal-content {
+    padding: 24px 20px;
+    margin: 15px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  /* Düğüm Plus Menüsü Mobilde Daha Kolay Tıklanır */
+  .plus-options {
+    padding-left: 10px;
+  }
+  .plus-options-inner button {
+    padding: 12px 14px; /* Mobilde parmakla daha kolay tıklanır */
+  }
+}
