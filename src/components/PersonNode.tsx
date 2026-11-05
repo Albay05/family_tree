@@ -11,8 +11,13 @@ export default function PersonNodeComponent({ id, data }: { id: string; data: Pe
 
   return (
     <div className="person-card glass-panel" style={{ position: 'relative' }}>
-      <Handle type="target" position={Position.Top} style={{ background: 'var(--btn-primary-from)', width: 8, height: 8 }} />
-      <Handle type="source" position={Position.Bottom} style={{ background: 'var(--btn-primary-from)', width: 8, height: 8 }} />
+      {/* EBEVEYN - ÇOCUK BAĞLANTILARI İÇİN DİKEY NOKTALAR */}
+      <Handle type="target" position={Position.Top} id="top" style={{ background: 'var(--btn-primary-from)', width: 8, height: 8 }} />
+      <Handle type="source" position={Position.Bottom} id="bottom" style={{ background: 'var(--btn-primary-from)', width: 8, height: 8 }} />
+      
+      {/* EŞ BAĞLANTILARI İÇİN YATAY NOKTALAR (PEMBE RENKTE) */}
+      <Handle type="target" position={Position.Left} id="left" style={{ background: '#ec4899', width: 8, height: 8, borderRadius: '4px' }} />
+      <Handle type="source" position={Position.Right} id="right" style={{ background: '#ec4899', width: 8, height: 8, borderRadius: '4px' }} />
 
       <div className="node-plus-menu">
         <div className="plus-btn"><Plus size={18} /></div>
