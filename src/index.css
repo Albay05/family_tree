@@ -607,10 +607,44 @@ body {
 }
 
 /* ==========================================
+   BAĞIMSIZ KİŞİ EKLEME BUTONU (FAB - SAĞ ALT)
+   ========================================== */
+.fab-add-node {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--btn-primary-from), var(--btn-primary-to));
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  z-index: 100;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+}
+
+.fab-add-node:hover {
+  transform: scale(1.1) translateY(-5px);
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6);
+}
+
+/* ==========================================
    MOBİL (RESPONSIVE) TASARIM KURALLARI
    ========================================== */
 @media (max-width: 768px) {
   /* Üst Bar (TopBar) Mobil Düzeni */
+  .fab-add-node {
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+  }
+  
   #ui-controls {
     flex-direction: column;
     align-items: center;
