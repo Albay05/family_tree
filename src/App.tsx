@@ -6,7 +6,7 @@ import IntroScreen from './components/IntroScreen';
 import PersonNodeComponent from './components/PersonNode';
 import TopBar from './components/TopBar';
 import ModalManager from './components/ModalManager';
-import { Plus } from 'lucide-react';
+import { Plus, UserPlus } from 'lucide-react'; // UserPlus ikonu eklendi
 
 const nodeTypes = { person: PersonNodeComponent };
 
@@ -26,6 +26,7 @@ export default function App() {
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
       <TopBar />
+      
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -44,12 +45,24 @@ export default function App() {
         <Controls showInteractive={false} />
       </ReactFlow>
 
+      {/* İLK DÜĞÜM KART KUTUSU (Sadece ağaç boşken) */}
       {isTreeEmpty && (
         <div className="null-node-card glass-panel" onClick={(e) => { e.stopPropagation(); openModal('ADD', null); }}>
           <div className="null-node-icon"><Plus size={32} /></div>
           <h3>{language === 'tr' ? 'Soy Ağacınızı Başlatın' : 'Start Your Family Tree'}</h3>
           <p>{language === 'tr' ? 'Ağacınıza ilk kişiyi eklemek ve köklerinizi oluşturmak için buraya tıklayın.' : 'Click here to add the first person and build your roots.'}</p>
         </div>
+      )}
+
+      {/* BAĞIMSIZ KİŞİ EKLEME BUTONU (Sadece ağaç doluyken sağ altta) */}
+      {!isTreeEmpty && (
+        <button 
+          className="fab-add-node" 
+          onClick={(e) => { e.stopPropagation(); openModal('ADD', null); }}
+          title={language === 'tr' ? 'Bağımsız Kişi Ekle' : 'Add Independent Person'}
+        >
+          <UserPlus size={24} />
+        </button>
       )}
 
       <ModalManager />
