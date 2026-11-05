@@ -39,10 +39,17 @@ export default function ModalManager() {
     closeModal();
   };
 
+  const getDefaultFileName = () => treeName || (language === 'tr' ? 'soy_agaci' : 'family_tree');
+
   const handleExportJSON = () => {
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify({ treeName, nodes, edges: useTreeStore.getState().edges }, null, 2));
-    const a = document.createElement('a'); a.href = dataStr; a.download = `${treeName || 'soy_agaci'}.json`;
-    document.body.appendChild(a); a.click(); a.remove(); closeModal();
+    const a = document.createElement('a'); 
+    a.href = dataStr; 
+    a.download = `${getDefaultFileName()}.json`;
+    document.body.appendChild(a); 
+    a.click(); 
+    a.remove(); 
+    closeModal();
   };
 
   const handleExportImage = async () => {
@@ -50,7 +57,10 @@ export default function ModalManager() {
     const reactFlowEl = document.querySelector('.react-flow') as HTMLElement;
     const uiPanels = document.querySelectorAll('.react-flow__panel');
     uiPanels.forEach(p => ((p as HTMLElement).style.visibility = 'hidden'));
-    const canvas = await html2canvas(reactFlowEl, { backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f8fafc', scale: 2 });
+    
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const canvas = await html2canvas(reactFlowEl, { backgroundColor: isDark ? '#0f172a' : '#f8fafc', scale: 2 });
+    
     uiPanels.forEach(p => ((p as HTMLElement).style.visibility = 'visible'));
     setPreviewImageUrl(canvas.toDataURL('image/png'));
     openModal('PREVIEW');
@@ -58,27 +68,60 @@ export default function ModalManager() {
 
   const getPlaceholderName = () => gender === 'M' ? (language === 'tr' ? 'Ahmet' : 'John') : (language === 'tr' ? 'Ayşe' : 'Jane');
   const getPlaceholderLast = () => language === 'tr' ? 'Yılmaz' : 'Doe';
+  const getPlaceholderNote = () => language === 'tr' ? 'Aile geçmişi, unvan veya notlar...' : 'Family history, titles, or notes...';
+  const getPlaceholderPlace = () => language === 'tr' ? 'İstanbul' : 'London';
 
   return (
     <>
       {(activeModal === 'ADD' || activeModal === 'EDIT') && (
         <div className="modal">
           <div className="modal-content glass-panel">
-            <h2>{activeModal === 'EDIT' ? (language === 'tr' ? 'Kişiyi Düzenle' : 'Edit Person') : (language === 'tr' ? 'Kişi Bilgileri' : 'Person Details')}</h2>
+            <h2>
+              {activeModal === 'EDIT' 
+                ? (language === 'tr' ? 'Kişiyi Düzenle' : 'Edit Person') 
+                : (language === 'tr' ? 'Kişi Bilgileri' : 'Person Details')}
+            </h2>
             <div className="gender-toggle">
-              <button type="button" className={`gender-btn ${gender === 'M' ? 'active male' : ''}`} onClick={() => setGender('M')}>{language === 'tr' ? 'Erkek' : 'Male'}</button>
-              <button type="button" className={`gender-btn ${gender === 'F' ? 'active female' : ''}`} onClick={() => setGender('F')}>{language === 'tr' ? 'Kadın' : 'Female'}</button>
+              <button type="button" className={`gender-btn ${gender === 'M' ? 'active male' : ''}`} onClick={() => setGender('M')}>
+                {language === 'tr' ? 'Erkek' : 'Male'}
+              </button>
+              <button type="button" className={`gender-btn ${gender === 'F' ? 'active female' : ''}`} onClick={() => setGender('F')}>
+                {language === 'tr' ? 'Kadın' : 'Female'}
+              </button>
             </div>
+            
             <div className="form-row">
-              <div className="input-field"><label>{language === 'tr' ? 'İsim' : 'First Name'} *</label><input type="text" placeholder={getPlaceholderName()} value={firstName} onChange={(e) => setFirstName(e.target.value)} autoFocus /></div>
-              <div className="input-field"><label>{language === 'tr' ? 'Soyisim' : 'Last Name'}</label><input type="text" placeholder={getPlaceholderLast()} value={lastName} onChange={(e) => setLastName(e.target.value)} /></div>
+              <div className="input-field">
+                <label>{language === 'tr' ? 'İsim' : 'First Name'} *</label>
+                <input type="text" placeholder={getPlaceholderName()} value={firstName} onChange={(e) => setFirstName(e.target.value)} autoFocus />
+              </div>
+              <div className="input-field">
+                <label>{language === 'tr' ? 'Soyisim' : 'Last Name'}</label>
+                <input type="text" placeholder={getPlaceholderLast()} value={lastName} onChange={(e) => setLastName(e.target.value)} />
+              </div>
             </div>
+            
             <div className="form-row">
-              <div className="input-field"><label>{language === 'tr' ? 'Doğum Tarihi' : 'Birth Date'}</label><input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} /></div>
-              <div className="input-field"><label>{language === 'tr' ? 'Vefat Tarihi' : 'Death Date'}</label><input type="date" value={deathDate} onChange={(e) => setDeathDate(e.target.value)} /></div>
+              <div className="input-field">
+                <label>{language === 'tr' ? 'Doğum Tarihi' : 'Birth Date'}</label>
+                <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+              </div>
+              <div className="input-field">
+                <label>{language === 'tr' ? 'Vefat Tarihi' : 'Death Date'}</label>
+                <input type="date" value={deathDate} onChange={(e) => setDeathDate(e.target.value)} />
+              </div>
             </div>
-            <div className="input-field"><label>{language === 'tr' ? 'Doğum Yeri' : 'Birth Place'}</label><input type="text" placeholder={language === 'tr' ? 'İstanbul' : 'London'} value={birthPlace} onChange={(e) => setBirthPlace(e.target.value)} /></div>
-            <div className="input-field"><label>{language === 'tr' ? 'Ek Notlar' : 'Notes'}</label><textarea placeholder="..." rows={3} value={note} onChange={(e) => setNote(e.target.value)} /></div>
+            
+            <div className="input-field">
+              <label>{language === 'tr' ? 'Doğum Yeri' : 'Birth Place'}</label>
+              <input type="text" placeholder={getPlaceholderPlace()} value={birthPlace} onChange={(e) => setBirthPlace(e.target.value)} />
+            </div>
+            
+            <div className="input-field">
+              <label>{language === 'tr' ? 'Ek Notlar' : 'Notes'}</label>
+              <textarea placeholder={getPlaceholderNote()} rows={3} value={note} onChange={(e) => setNote(e.target.value)} />
+            </div>
+            
             <div className="modal-actions">
               <button className="btn secondary" onClick={closeModal}><X size={16} /> {language === 'tr' ? 'İptal' : 'Cancel'}</button>
               <button className="btn success" onClick={handleSaveModal}><Check size={16} /> {language === 'tr' ? 'Kaydet' : 'Save'}</button>
@@ -109,7 +152,10 @@ export default function ModalManager() {
             </div>
             <div className="modal-actions" style={{ justifyContent: 'center', marginTop: '12px' }}>
               <button className="btn success" onClick={() => {
-                const a = document.createElement('a'); a.href = previewImageUrl; a.download = `${treeName || 'soy_agaci'}.png`; a.click();
+                const a = document.createElement('a'); 
+                a.href = previewImageUrl; 
+                a.download = `${getDefaultFileName()}.png`; 
+                a.click();
               }}>{language === 'tr' ? 'Cihaza Kaydet' : 'Save to Device'}</button>
               <button className="btn danger" onClick={closeModal}>{language === 'tr' ? 'Kapat' : 'Close'}</button>
             </div>
