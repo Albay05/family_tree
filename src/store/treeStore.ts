@@ -8,7 +8,7 @@ interface TreeState {
   treeName: string;
   isTreeActive: boolean;
   isDarkTheme: boolean;
-  language: 'tr' | 'en'; // DİL DESTEĞİ
+  language: 'tr' | 'en';
   activeModal: ModalType | null;
   selectedNodeId: string | null;
   relationType: 'parent' | 'child' | 'partner' | null;
@@ -32,7 +32,7 @@ interface TreeState {
   loadFromJSON: (data: any) => void;
   resetTree: () => void;
   
-  handleManualConnect: (connection: Connection) => void; // MANUEL SÜRÜKLE BIRAK
+  handleManualConnect: (connection: Connection) => void;
 }
 
 export const useTreeStore = create<TreeState>((set, get) => ({
@@ -69,7 +69,7 @@ export const useTreeStore = create<TreeState>((set, get) => ({
       if (targetNode) {
         if (relationType === 'child') { x = targetNode.position.x; y = targetNode.position.y + 150; }
         else if (relationType === 'parent') { x = targetNode.position.x; y = targetNode.position.y - 150; }
-        else if (relationType === 'partner') { x = targetNode.position.x + 220; y = targetNode.position.y; }
+        else if (relationType === 'partner') { x = targetNode.position.x + 240; y = targetNode.position.y; }
       }
     }
 
@@ -78,25 +78,22 @@ export const useTreeStore = create<TreeState>((set, get) => ({
 
     if (selectedNodeId) {
       if (relationType === 'child') {
-        newEdges.push({ id: `e-${selectedNodeId}-${newNodeId}`, source: selectedNodeId, target: newNodeId, data: { type: 'child' } });
-        
-        // Ebeveyne çocuk ekleniyorsa ve 1 tane eşi varsa, eşini de çocuğa otomatik bağla
+        newEdges.push({ id: `e-${selectedNodeId}-${newNodeId}`, source: selectedNodeId, target: newNodeId, sourceHandle: 'bottom', targetHandle: 'top', data: { type: 'child' } });
         const partners = edges.filter(e => e.data?.type === 'partner' && (e.source === selectedNodeId || e.target === selectedNodeId));
         if (partners.length === 1) {
           const partnerId = partners[0].source === selectedNodeId ? partners[0].target : partners[0].source;
-          newEdges.push({ id: `e-${partnerId}-${newNodeId}`, source: partnerId, target: newNodeId, data: { type: 'child' } });
+          newEdges.push({ id: `e-${partnerId}-${newNodeId}`, source: partnerId, target: newNodeId, sourceHandle: 'bottom', targetHandle: 'top', data: { type: 'child' } });
         }
       } 
       else if (relationType === 'parent') {
-        newEdges.push({ id: `e-${newNodeId}-${selectedNodeId}`, source: newNodeId, target: selectedNodeId, data: { type: 'child' } });
+        newEdges.push({ id: `e-${newNodeId}-${selectedNodeId}`, source: newNodeId, target: selectedNodeId, sourceHandle: 'bottom', targetHandle: 'top', data: { type: 'child' } });
       } 
       else if (relationType === 'partner') {
-        newEdges.push({ id: `e-${selectedNodeId}-${newNodeId}`, source: selectedNodeId, target: newNodeId, data: { type: 'partner' } });
-        
-        // Kişiye İLK DEFA eş ekleniyorsa ve halihazırda çocukları varsa, yeni eşi o çocuklara otomatik ebeveyn yap
+        // EŞLER YATAY BAĞLANIR (RIGHT -> LEFT)
+        newEdges.push({ id: `e-${selectedNodeId}-${newNodeId}`, source: selectedNodeId, target: newNodeId, sourceHandle: 'right', targetHandle: 'left', data: { type: 'partner' } });
         const childrenEdges = edges.filter(e => e.source === selectedNodeId && e.data?.type === 'child');
         childrenEdges.forEach(ce => {
-          newEdges.push({ id: `e-${newNodeId}-${ce.target}`, source: newNodeId, target: ce.target, data: { type: 'child' } });
+          newEdges.push({ id: `e-${newNodeId}-${ce.target}`, source: newNodeId, target: ce.target, sourceHandle: 'bottom', targetHandle: 'top', data: { type: 'child' } });
         });
       }
     }
@@ -105,39 +102,37 @@ export const useTreeStore = create<TreeState>((set, get) => ({
   },
   
   editPerson: (id, data) => {
-    set(state => ({
-      nodes: state.nodes.map(node => node.id === id ? { ...node, data: { ...node.data, ...data } } : node),
-      activeModal: null
-    }));
+    set(state => ({ nodes: state.nodes.map(node => node.id === id ? { ...node, data: { ...node.data, ...data } } : node), activeModal: null }));
   },
   
   deletePerson: (id) => {
-    set(state => ({
-      nodes: state.nodes.filter(n => n.id !== id),
-      edges: state.edges.filter(e => e.source !== id && e.target !== id)
-    }));
+    set(state => ({ nodes: state.nodes.filter(n => n.id !== id), edges: state.edges.filter(e => e.source !== id && e.target !== id) }));
   },
 
   handleManualConnect: (connection) => {
     const { edges } = get();
-    const { source, target } = connection;
+    const { source, target, sourceHandle, targetHandle } = connection;
     if (!source || !target) return;
 
     let newEdges = [...edges];
     
-    // Normal bağlantıyı çocuk olarak ekle
+    // Sağ-Sol noktalarından bağlandıysa "eş", Alt-Üst noktalarından bağlandıysa "çocuk" say
+    const isPartner = sourceHandle === 'right' || sourceHandle === 'left' || targetHandle === 'left' || targetHandle === 'right';
+    const edgeType = isPartner ? 'partner' : 'child';
+
     const edgeExists = newEdges.some(e => e.source === source && e.target === target);
     if (!edgeExists) {
-      newEdges.push({ ...connection, id: `e-${source}-${target}`, data: { type: 'child' } });
+      newEdges.push({ ...connection, id: `e-${source}-${target}`, data: { type: edgeType } });
     }
 
-    // Sürüklenen hedefin bir eşi varsa (1 tane ise), çocuğu o eşe de otomatik bağla
-    const partners = edges.filter(e => e.data?.type === 'partner' && (e.source === source || e.target === source));
-    if (partners.length === 1) {
-      const partnerId = partners[0].source === source ? partners[0].target : partners[0].source;
-      const partnerEdgeExists = newEdges.some(e => e.source === partnerId && e.target === target);
-      if (!partnerEdgeExists) {
-        newEdges.push({ id: `e-${partnerId}-${target}`, source: partnerId, target: target, data: { type: 'child' }, sourceHandle: connection.sourceHandle, targetHandle: connection.targetHandle });
+    if (edgeType === 'child') {
+      const partners = edges.filter(e => e.data?.type === 'partner' && (e.source === source || e.target === source));
+      if (partners.length === 1) {
+        const partnerId = partners[0].source === source ? partners[0].target : partners[0].source;
+        const partnerEdgeExists = newEdges.some(e => e.source === partnerId && e.target === target);
+        if (!partnerEdgeExists) {
+          newEdges.push({ id: `e-${partnerId}-${target}`, source: partnerId, target: target, sourceHandle: 'bottom', targetHandle: 'top', data: { type: 'child' } });
+        }
       }
     }
     
