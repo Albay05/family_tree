@@ -1,178 +1,149 @@
 import { create } from 'zustand';
-import type { Node, Edge } from 'reactflow';
+import type { Node, Edge, Connection } from 'reactflow';
 import type { PersonData, ModalType } from '../types/tree';
 
 interface TreeState {
+  nodes: Node<PersonData>[];
+  edges: Edge[];
   treeName: string;
   isTreeActive: boolean;
   isDarkTheme: boolean;
-  nodes: Node<PersonData>[];
-  edges: Edge[];
-
-  activeModal: ModalType;
+  language: 'tr' | 'en'; // DİL DESTEĞİ
+  activeModal: ModalType | null;
   selectedNodeId: string | null;
-  relationType: 'parent' | 'partner' | 'child' | 'sibling' | null;
+  relationType: 'parent' | 'child' | 'partner' | null;
   previewImageUrl: string;
-
-  setTreeName: (name: string) => void;
+  
+  setLanguage: (lang: 'tr' | 'en') => void;
   setDarkTheme: (isDark: boolean) => void;
+  setTreeName: (name: string) => void;
   setTreeActive: (active: boolean) => void;
+  
   updateNodes: (nodes: Node<PersonData>[]) => void;
   updateEdges: (edges: Edge[]) => void;
-
-  openModal: (type: ModalType, nodeId?: string | null, relType?: 'parent' | 'partner' | 'child' | 'sibling' | null) => void;
+  
+  openModal: (type: ModalType, nodeId?: string | null, relType?: 'parent' | 'child' | 'partner' | null) => void;
   closeModal: () => void;
   setPreviewImageUrl: (url: string) => void;
-
-  addPerson: (data: Omit<PersonData, 'id' | 'parents' | 'children' | 'partners'>) => void;
-  editPerson: (id: string, data: Partial<PersonData>) => void;
+  
+  addPerson: (data: PersonData) => void;
+  editPerson: (id: string, data: PersonData) => void;
   deletePerson: (id: string) => void;
-  loadFromJSON: (jsonData: any) => void;
+  loadFromJSON: (data: any) => void;
   resetTree: () => void;
+  
+  handleManualConnect: (connection: Connection) => void; // MANUEL SÜRÜKLE BIRAK
 }
 
 export const useTreeStore = create<TreeState>((set, get) => ({
-  treeName: 'Benim Soy Ağacım',
-  isTreeActive: false,
-  isDarkTheme: true,
   nodes: [],
   edges: [],
-
+  treeName: '',
+  isTreeActive: false,
+  isDarkTheme: false,
+  language: 'tr',
   activeModal: null,
   selectedNodeId: null,
   relationType: null,
   previewImageUrl: '',
 
-  setTreeName: (name) => set({ treeName: name }),
-  setDarkTheme: (isDark) => set({ isDarkTheme: isDark }),
-  setTreeActive: (active) => set({ isTreeActive: active }),
-  updateNodes: (nodes) => set({ nodes }),
-  updateEdges: (edges) => set({ edges }),
-
-  openModal: (type, nodeId = null, relType = null) =>
-    set({ activeModal: type, selectedNodeId: nodeId, relationType: relType }),
-  closeModal: () =>
-    set({ activeModal: null, selectedNodeId: null, relationType: null }),
-  setPreviewImageUrl: (url) => set({ previewImageUrl: url }),
-
-  addPerson: (data, partnerId = null) => {
-    const { nodes, selectedNodeId, relationType } = get();
-    const newId = 'node-' + Date.now();
-
-    // Varsayılan pozisyon (merkez)
-    let x = window.innerWidth / 2 - 90;
-    let y = window.innerHeight / 2 - 60;
+  setLanguage: (lang) => set({ language: lang }),
+  setDarkTheme: (isDarkTheme) => set({ isDarkTheme }),
+  setTreeName: (treeName) => set({ treeName }),
+  setTreeActive: (isTreeActive) => set({ isTreeActive }),
+  
+  updateNodes: (newNodes) => set({ nodes: typeof newNodes === 'function' ? newNodes(get().nodes) : newNodes }),
+  updateEdges: (newEdges) => set({ edges: typeof newEdges === 'function' ? newEdges(get().edges) : newEdges }),
+  
+  openModal: (activeModal, selectedNodeId = null, relationType = null) => set({ activeModal, selectedNodeId, relationType }),
+  closeModal: () => set({ activeModal: null, selectedNodeId: null, relationType: null }),
+  setPreviewImageUrl: (previewImageUrl) => set({ previewImageUrl }),
+  
+  addPerson: (data) => {
+    const { activeModal, selectedNodeId, nodes, edges, relationType } = get();
+    const newNodeId = `node-${Date.now()}`;
+    let x = 0, y = 0;
 
     if (selectedNodeId) {
       const targetNode = nodes.find(n => n.id === selectedNodeId);
       if (targetNode) {
-        if (relationType === 'parent') { x = targetNode.position.x; y = targetNode.position.y - 180; }
-        else if (relationType === 'child') { x = targetNode.position.x; y = targetNode.position.y + 180; }
+        if (relationType === 'child') { x = targetNode.position.x; y = targetNode.position.y + 150; }
+        else if (relationType === 'parent') { x = targetNode.position.x; y = targetNode.position.y - 150; }
         else if (relationType === 'partner') { x = targetNode.position.x + 220; y = targetNode.position.y; }
-        else if (relationType === 'sibling') { x = targetNode.position.x + 200; y = targetNode.position.y; }
       }
     }
 
-    const newPerson: PersonData = {
-      id: newId,
-      ...data,
-      parents: [],
-      children: [],
-      partners: []
-    };
+    const newNode: Node<PersonData> = { id: newNodeId, type: 'person', position: { x, y }, data };
+    let newEdges = [...edges];
 
-    const newNode: Node<PersonData> = {
-      id: newId,
-      type: 'person',
-      position: { x, y },
-      data: newPerson
-    };
-
-    const updatedNodes = [...nodes, newNode];
-    const updatedEdges = [...get().edges];
-
-    // İlişki çizgisi ekleme (React Flow Edge)
-    if (selectedNodeId && relationType) {
-      if (relationType === 'parent') {
-        updatedEdges.push({ id: `e-${newId}-${selectedNodeId}`, source: newId, target: selectedNodeId, animated: false });
-      } else if (relationType === 'child') {
-        // Edge from the primary selected parent
-        updatedEdges.push({ id: `e-${selectedNodeId}-${newId}`, source: selectedNodeId, target: newId, animated: false });
-        // Determine the partner that should also be a parent
-        let actualPartnerId = partnerId;
-        if (!actualPartnerId) {
-          const parentNode = nodes.find(n => n.id === selectedNodeId);
-          actualPartnerId = parentNode?.data.partners?.[0] || null;
+    if (selectedNodeId) {
+      if (relationType === 'child') {
+        newEdges.push({ id: `e-${selectedNodeId}-${newNodeId}`, source: selectedNodeId, target: newNodeId, data: { type: 'child' } });
+        
+        // Ebeveyne çocuk ekleniyorsa ve 1 tane eşi varsa, eşini de çocuğa otomatik bağla
+        const partners = edges.filter(e => e.data?.type === 'partner' && (e.source === selectedNodeId || e.target === selectedNodeId));
+        if (partners.length === 1) {
+          const partnerId = partners[0].source === selectedNodeId ? partners[0].target : partners[0].source;
+          newEdges.push({ id: `e-${partnerId}-${newNodeId}`, source: partnerId, target: newNodeId, data: { type: 'child' } });
         }
-        // If a partner exists, add a second edge and record both parents
-        if (actualPartnerId) {
-          updatedEdges.push({ id: `e-${actualPartnerId}-${newId}`, source: actualPartnerId, target: newId, animated: false });
-          newPerson.parents = [selectedNodeId, actualPartnerId];
-        } else {
-          newPerson.parents = [selectedNodeId];
-        }
-      } else if (relationType === 'partner') {
-        // Use partner‑specific handles so the edge attaches left↔right
-        updatedEdges.push({
-          id: `e-${selectedNodeId}-${newId}`,
-          source: selectedNodeId,
-          sourceHandle: 'partner-source',
-          target: newId,
-          targetHandle: 'partner-target',
-          style: { strokeDasharray: '5,5' },
+      } 
+      else if (relationType === 'parent') {
+        newEdges.push({ id: `e-${newNodeId}-${selectedNodeId}`, source: newNodeId, target: selectedNodeId, data: { type: 'child' } });
+      } 
+      else if (relationType === 'partner') {
+        newEdges.push({ id: `e-${selectedNodeId}-${newNodeId}`, source: selectedNodeId, target: newNodeId, data: { type: 'partner' } });
+        
+        // Kişiye İLK DEFA eş ekleniyorsa ve halihazırda çocukları varsa, yeni eşi o çocuklara otomatik ebeveyn yap
+        const childrenEdges = edges.filter(e => e.source === selectedNodeId && e.data?.type === 'child');
+        childrenEdges.forEach(ce => {
+          newEdges.push({ id: `e-${newNodeId}-${ce.target}`, source: newNodeId, target: ce.target, data: { type: 'child' } });
         });
-        // Record partnership in both nodes
-        newPerson.partners = [selectedNodeId];
-        const idx = updatedNodes.findIndex(n => n.id === selectedNodeId);
-        if (idx !== -1) {
-          const existing = updatedNodes[idx];
-          existing.data = { ...existing.data, partners: [...existing.data.partners, newId] };
-          updatedNodes[idx] = existing;
-        }
       }
     }
 
-    set({ nodes: updatedNodes, edges: updatedEdges });
+    set({ nodes: [...nodes, newNode], edges: newEdges, activeModal: null, selectedNodeId: null, relationType: null });
   },
-
+  
   editPerson: (id, data) => {
-    set({
-      nodes: get().nodes.map(node =>
-        node.id === id ? { ...node, data: { ...node.data, ...data } } : node
-      )
-    });
+    set(state => ({
+      nodes: state.nodes.map(node => node.id === id ? { ...node, data: { ...node.data, ...data } } : node),
+      activeModal: null
+    }));
   },
-
+  
   deletePerson: (id) => {
-    set({
-      nodes: get().nodes.filter(n => n.id !== id),
-      edges: get().edges.filter(e => e.source !== id && e.target !== id)
-    });
+    set(state => ({
+      nodes: state.nodes.filter(n => n.id !== id),
+      edges: state.edges.filter(e => e.source !== id && e.target !== id)
+    }));
   },
 
-  loadFromJSON: (jsonData) => {
-    const rawNodes = jsonData.nodes || jsonData;
-    const name = jsonData.treeName || "Yüklenen Ağaç";
+  handleManualConnect: (connection) => {
+    const { edges } = get();
+    const { source, target } = connection;
+    if (!source || !target) return;
 
-    const loadedNodes: Node<PersonData>[] = [];
-    const loadedEdges: Edge[] = [];
+    let newEdges = [...edges];
+    
+    // Normal bağlantıyı çocuk olarak ekle
+    const edgeExists = newEdges.some(e => e.source === source && e.target === target);
+    if (!edgeExists) {
+      newEdges.push({ ...connection, id: `e-${source}-${target}`, data: { type: 'child' } });
+    }
 
-    Object.values(rawNodes).forEach((person: any) => {
-      loadedNodes.push({
-        id: person.id,
-        type: 'person',
-        position: { x: person.x ?? 250, y: person.y ?? 150 },
-        data: person
-      });
-
-      // Bağlantıları yükle
-      (person.children || []).forEach((childId: string) => {
-        loadedEdges.push({ id: `e-${person.id}-${childId}`, source: person.id, target: childId });
-      });
-    });
-
-    set({ treeName: name, nodes: loadedNodes, edges: loadedEdges, isTreeActive: true });
+    // Sürüklenen hedefin bir eşi varsa (1 tane ise), çocuğu o eşe de otomatik bağla
+    const partners = edges.filter(e => e.data?.type === 'partner' && (e.source === source || e.target === source));
+    if (partners.length === 1) {
+      const partnerId = partners[0].source === source ? partners[0].target : partners[0].source;
+      const partnerEdgeExists = newEdges.some(e => e.source === partnerId && e.target === target);
+      if (!partnerEdgeExists) {
+        newEdges.push({ id: `e-${partnerId}-${target}`, source: partnerId, target: target, data: { type: 'child' }, sourceHandle: connection.sourceHandle, targetHandle: connection.targetHandle });
+      }
+    }
+    
+    set({ edges: newEdges });
   },
-
-  resetTree: () => set({ nodes: [], edges: [], isTreeActive: false, treeName: 'Benim Soy Ağacım' })
+  
+  loadFromJSON: (data) => set({ nodes: data.nodes || [], edges: data.edges || [], treeName: data.treeName || '', isTreeActive: true }),
+  resetTree: () => set({ nodes: [], edges: [], treeName: '', isTreeActive: false })
 }));
