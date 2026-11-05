@@ -25,9 +25,14 @@ export default function IntroScreen() {
       <div className="bg-orb bg-orb-2"></div>
       <div className="bg-pattern"></div>
 
+      {/* SAĞ ÜST KONTROLLER (GENİŞLİK DÜZELTİLDİ) */}
       <div style={{ position: 'absolute', top: '24px', right: '24px', zIndex: 10, display: 'flex', gap: '10px' }}>
-        <button className="btn-icon glass-panel" onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}>
-          <Globe size={18} style={{ marginRight: '4px' }} /> {language.toUpperCase()}
+        <button 
+          className="btn-icon glass-panel" 
+          style={{ width: 'auto', padding: '0 16px', fontWeight: 600 }}
+          onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
+        >
+          <Globe size={18} style={{ marginRight: '6px' }} /> {language.toUpperCase()}
         </button>
         <button className="btn-icon glass-panel" onClick={() => setDarkTheme(!isDarkTheme)}>
           {isDarkTheme ? <Sun size={20} /> : <Moon size={20} />}
