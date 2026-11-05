@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import ReactFlow, { Background, BackgroundVariant, Controls, applyNodeChanges, applyEdgeChanges } from 'reactflow';
-import type { Edge, Node } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useTreeStore } from './store/treeStore';
 import IntroScreen from './components/IntroScreen';
@@ -12,7 +11,7 @@ import { Plus } from 'lucide-react';
 const nodeTypes = { person: PersonNodeComponent };
 
 export default function App() {
-  const { isTreeActive, isDarkTheme, nodes, edges, updateNodes, updateEdges, openModal } = useTreeStore();
+  const { isTreeActive, isDarkTheme, nodes, edges, updateNodes, updateEdges, openModal, handleManualConnect, language } = useTreeStore();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', isDarkTheme ? 'dark' : 'light');
@@ -21,10 +20,7 @@ export default function App() {
   const onNodesChange = (changes: any) => updateNodes(applyNodeChanges(changes, nodes));
   const onEdgesChange = (changes: any) => updateEdges(applyEdgeChanges(changes, edges));
 
-  if (!isTreeActive) {
-    return <IntroScreen />;
-  }
-
+  if (!isTreeActive) return <IntroScreen />;
   const isTreeEmpty = nodes.length === 0;
 
   return (
@@ -35,6 +31,7 @@ export default function App() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onConnect={handleManualConnect}
         nodeTypes={nodeTypes}
         fitView
         minZoom={0.2}
@@ -43,29 +40,15 @@ export default function App() {
         zoomOnPinch={!isTreeEmpty}
         zoomOnDoubleClick={!isTreeEmpty}
       >
-        <Background 
-          variant={BackgroundVariant.Dots}
-          color={isDarkTheme ? '#64748b' : '#94a3b8'} 
-          gap={24} 
-          size={2.5} 
-        />
-        <Controls />
+        <Background variant={BackgroundVariant.Dots} color={isDarkTheme ? '#64748b' : '#94a3b8'} gap={24} size={2.5} />
+        <Controls showInteractive={false} />
       </ReactFlow>
 
-      {/* İLK KİŞİ EKLEME KART KUTUSU */}
       {isTreeEmpty && (
-        <div 
-          className="null-node-card glass-panel" 
-          onClick={(e) => {
-            e.stopPropagation();
-            openModal('ADD', null);
-          }}
-        >
-          <div className="null-node-icon">
-            <Plus size={32} />
-          </div>
-          <h3>Soy Ağacınızı Başlatın</h3>
-          <p>Ağacınıza ilk kişiyi eklemek ve köklerinizi oluşturmak için buraya tıklayın.</p>
+        <div className="null-node-card glass-panel" onClick={(e) => { e.stopPropagation(); openModal('ADD', null); }}>
+          <div className="null-node-icon"><Plus size={32} /></div>
+          <h3>{language === 'tr' ? 'Soy Ağacınızı Başlatın' : 'Start Your Family Tree'}</h3>
+          <p>{language === 'tr' ? 'Ağacınıza ilk kişiyi eklemek ve köklerinizi oluşturmak için buraya tıklayın.' : 'Click here to add the first person and build your roots.'}</p>
         </div>
       )}
 
