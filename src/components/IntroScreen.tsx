@@ -2,7 +2,7 @@ import { useTreeStore } from '../store/treeStore';
 import { Plus, FolderOpen, Moon, Sun, Globe } from 'lucide-react';
 
 export default function IntroScreen() {
-  const { setTreeActive, isDarkTheme, setDarkTheme, loadFromJSON, language, setLanguage } = useTreeStore();
+  const { setTreeActive, startTutorial, isDarkTheme, setDarkTheme, loadFromJSON, language, setLanguage } = useTreeStore();
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -25,7 +25,6 @@ export default function IntroScreen() {
       <div className="bg-orb bg-orb-2"></div>
       <div className="bg-pattern"></div>
 
-      {/* SAĞ ÜST KONTROLLER (GENİŞLİK DÜZELTİLDİ) */}
       <div style={{ position: 'absolute', top: '24px', right: '24px', zIndex: 10, display: 'flex', gap: '10px' }}>
         <button 
           className="btn-icon glass-panel" 
@@ -47,7 +46,10 @@ export default function IntroScreen() {
             : 'Discover your roots, design your story from past to future on a modern canvas, and save it to your device.'}
         </p>
         <div className="buttons">
-          <button className="btn primary" onClick={() => setTreeActive(true)}>
+          <button 
+            className="btn primary" 
+            onClick={() => { setTreeActive(true); startTutorial(); }}
+          >
             <Plus size={18} /> {language === 'tr' ? 'Yeni Ağaç Oluştur' : 'Create New Tree'}
           </button>
           <label className="btn secondary" style={{ cursor: 'pointer', margin: 0 }}>
