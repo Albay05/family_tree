@@ -736,9 +736,9 @@ gap: 8px;
 
 /* ==========================================
 MOBİL (RESPONSIVE) - ÜST ÜSTE BİNMEYİ ÖNLEYEN DÜZEN
-========================================== /
+========================================== */
 @media (max-width: 768px) {
-/ Üst bar mobilde tek satır olur, yazılar gizlenir */
+/* Üst bar mobilde tek satır olur, yazılar gizlenir */
 #ui-controls {
 flex-direction: row;
 align-items: center;
