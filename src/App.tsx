@@ -6,12 +6,12 @@ import IntroScreen from './components/IntroScreen';
 import PersonNodeComponent from './components/PersonNode';
 import TopBar from './components/TopBar';
 import ModalManager from './components/ModalManager';
-import { Plus, UserPlus } from 'lucide-react'; // UserPlus ikonu eklendi
+import { Plus, UserPlus } from 'lucide-react';
 
 const nodeTypes = { person: PersonNodeComponent };
 
 export default function App() {
-  const { isTreeActive, isDarkTheme, nodes, edges, updateNodes, updateEdges, openModal, handleManualConnect, language } = useTreeStore();
+  const { isTreeActive, isDarkTheme, nodes, edges, updateNodes, updateEdges, openModal, handleManualConnect, language, setRfInstance } = useTreeStore();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', isDarkTheme ? 'dark' : 'light');
@@ -28,6 +28,7 @@ export default function App() {
       <TopBar />
       
       <ReactFlow
+        onInit={setRfInstance}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -45,7 +46,6 @@ export default function App() {
         <Controls showInteractive={false} />
       </ReactFlow>
 
-      {/* İLK DÜĞÜM KART KUTUSU (Sadece ağaç boşken) */}
       {isTreeEmpty && (
         <div className="null-node-card glass-panel" onClick={(e) => { e.stopPropagation(); openModal('ADD', null); }}>
           <div className="null-node-icon"><Plus size={32} /></div>
@@ -54,13 +54,8 @@ export default function App() {
         </div>
       )}
 
-      {/* BAĞIMSIZ KİŞİ EKLEME BUTONU (Sadece ağaç doluyken sağ altta) */}
       {!isTreeEmpty && (
-        <button 
-          className="fab-add-node" 
-          onClick={(e) => { e.stopPropagation(); openModal('ADD', null); }}
-          title={language === 'tr' ? 'Bağımsız Kişi Ekle' : 'Add Independent Person'}
-        >
+        <button className="fab-add-node" onClick={(e) => { e.stopPropagation(); openModal('ADD', null); }} title={language === 'tr' ? 'Bağımsız Kişi Ekle' : 'Add Independent Person'}>
           <UserPlus size={24} />
         </button>
       )}
