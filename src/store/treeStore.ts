@@ -13,11 +13,13 @@ interface TreeState {
   selectedNodeId: string | null;
   relationType: 'parent' | 'child' | 'partner' | null;
   previewImageUrl: string;
+  rfInstance: any; // Fotoğraf çekiminde Zoom ayarı için eklendi
   
   setLanguage: (lang: 'tr' | 'en') => void;
   setDarkTheme: (isDark: boolean) => void;
   setTreeName: (name: string) => void;
   setTreeActive: (active: boolean) => void;
+  setRfInstance: (instance: any) => void;
   
   updateNodes: (nodes: Node<PersonData>[]) => void;
   updateEdges: (edges: Edge[]) => void;
@@ -46,11 +48,13 @@ export const useTreeStore = create<TreeState>((set, get) => ({
   selectedNodeId: null,
   relationType: null,
   previewImageUrl: '',
+  rfInstance: null,
 
   setLanguage: (lang) => set({ language: lang }),
   setDarkTheme: (isDarkTheme) => set({ isDarkTheme }),
   setTreeName: (treeName) => set({ treeName }),
   setTreeActive: (isTreeActive) => set({ isTreeActive }),
+  setRfInstance: (instance) => set({ rfInstance: instance }),
   
   updateNodes: (newNodes) => set({ nodes: typeof newNodes === 'function' ? newNodes(get().nodes) : newNodes }),
   updateEdges: (newEdges) => set({ edges: typeof newEdges === 'function' ? newEdges(get().edges) : newEdges }),
@@ -89,7 +93,6 @@ export const useTreeStore = create<TreeState>((set, get) => ({
         newEdges.push({ id: `e-${newNodeId}-${selectedNodeId}`, source: newNodeId, target: selectedNodeId, sourceHandle: 'bottom', targetHandle: 'top', data: { type: 'child' } });
       } 
       else if (relationType === 'partner') {
-        // EŞLER YATAY BAĞLANIR (RIGHT -> LEFT)
         newEdges.push({ id: `e-${selectedNodeId}-${newNodeId}`, source: selectedNodeId, target: newNodeId, sourceHandle: 'right', targetHandle: 'left', data: { type: 'partner' } });
         const childrenEdges = edges.filter(e => e.source === selectedNodeId && e.data?.type === 'child');
         childrenEdges.forEach(ce => {
@@ -110,17 +113,26 @@ export const useTreeStore = create<TreeState>((set, get) => ({
   },
 
   handleManualConnect: (connection) => {
-    const { edges } = get();
+    const { edges, nodes, language } = get();
     const { source, target, sourceHandle, targetHandle } = connection;
     if (!source || !target) return;
 
     let newEdges = [...edges];
-    
-    // Sağ-Sol noktalarından bağlandıysa "eş", Alt-Üst noktalarından bağlandıysa "çocuk" say
     const isPartner = sourceHandle === 'right' || sourceHandle === 'left' || targetHandle === 'left' || targetHandle === 'right';
-    const edgeType = isPartner ? 'partner' : 'child';
+    
+    // AYNI CİNSİYET EŞ KONTROLÜ
+    if (isPartner) {
+      const sNode = nodes.find(n => n.id === source);
+      const tNode = nodes.find(n => n.id === target);
+      if (sNode && tNode && sNode.data.gender === tNode.data.gender) {
+        alert(language === 'tr' ? 'Aynı cinsiyetteki kişiler eş olarak bağlanamaz.' : 'Same-sex persons cannot be linked as partners.');
+        return;
+      }
+    }
 
+    const edgeType = isPartner ? 'partner' : 'child';
     const edgeExists = newEdges.some(e => e.source === source && e.target === target);
+    
     if (!edgeExists) {
       newEdges.push({ ...connection, id: `e-${source}-${target}`, data: { type: edgeType } });
     }
