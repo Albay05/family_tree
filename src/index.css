@@ -1,202 +1,202 @@
 @import 'reactflow/dist/style.css';
 
 :root {
-  --bg-color: #f8fafc;
-  --dot-color: #cbd5e1;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --card-bg: rgba(255, 255, 255, 0.92);
-  --card-border: rgba(226, 232, 240, 0.8);
-  --tree-edge-color: #f97316;
-  --modal-bg: rgba(255, 255, 255, 0.95);
-  --input-bg: #f1f5f9;
-  --input-border: #e2e8f0;
-  --shadow-color: rgba(15, 23, 42, 0.1);
+--bg-color: #f8fafc;
+--dot-color: #cbd5e1;
+--text-main: #0f172a;
+--text-muted: #64748b;
+--card-bg: rgba(255, 255, 255, 0.92);
+--card-border: rgba(226, 232, 240, 0.8);
+--tree-edge-color: #f97316;
+--modal-bg: rgba(255, 255, 255, 0.95);
+--input-bg: #f1f5f9;
+--input-border: #e2e8f0;
+--shadow-color: rgba(15, 23, 42, 0.1);
 
-  --intro-bg-1: #e0f2fe;
-  --intro-bg-2: #fdf4ff;
-  --btn-primary-from: #3b82f6;
-  --btn-primary-to: #8b5cf6;
+--intro-bg-1: #e0f2fe;
+--intro-bg-2: #fdf4ff;
+--btn-primary-from: #3b82f6;
+--btn-primary-to: #8b5cf6;
 }
 
 [data-theme="dark"] {
-  --bg-color: #0f172a;
-  --dot-color: #334155;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --card-bg: rgba(30, 41, 59, 0.92);
-  --card-border: rgba(255, 255, 255, 0.12);
-  --tree-edge-color: #fb923c;
-  --modal-bg: rgba(15, 23, 42, 0.95);
-  --input-bg: #1e293b;
-  --input-border: #334155;
-  --shadow-color: rgba(0, 0, 0, 0.45);
+--bg-color: #0f172a;
+--dot-color: #334155;
+--text-main: #f8fafc;
+--text-muted: #94a3b8;
+--card-bg: rgba(30, 41, 59, 0.92);
+--card-border: rgba(255, 255, 255, 0.12);
+--tree-edge-color: #fb923c;
+--modal-bg: rgba(15, 23, 42, 0.95);
+--input-bg: #1e293b;
+--input-border: #334155;
+--shadow-color: rgba(0, 0, 0, 0.45);
 
-  --intro-bg-1: #020617;
-  --intro-bg-2: #172554;
-  --btn-primary-from: #4f46e5;
-  --btn-primary-to: #c026d3;
+--intro-bg-1: #020617;
+--intro-bg-2: #172554;
+--btn-primary-from: #4f46e5;
+--btn-primary-to: #c026d3;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Poppins', sans-serif;
+{
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: 'Poppins', sans-serif;
 }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  overflow: hidden;
-  width: 100vw;
-  height: 100vh;
-  transition: background-color 0.4s ease;
+background-color: var(--bg-color);
+color: var(--text-main);
+overflow: hidden;
+width: 100vw;
+height: 100vh;
+transition: background-color 0.4s ease;
 }
 
 #root {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
+width: 100vw;
+height: 100vh;
+overflow: hidden;
+position: relative;
 }
 
 /* BUZLU CAM PANELİ */
 .glass-panel {
-  background: var(--card-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--card-border);
-  box-shadow: 0 10px 30px var(--shadow-color);
+background: var(--card-bg);
+backdrop-filter: blur(16px);
+-webkit-backdrop-filter: blur(16px);
+border: 1px solid var(--card-border);
+box-shadow: 0 10px 30px var(--shadow-color);
 }
 
 /* GİRİŞ EKRANI */
 #intro-screen {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  background-color: var(--intro-bg-1);
-  overflow: hidden;
+height: 100vh;
+width: 100vw;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+position: relative;
+background-color: var(--intro-bg-1);
+overflow: hidden;
 }
 
 .bg-pattern {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background-image: radial-gradient(var(--text-muted) 1px, transparent 1px);
-  background-size: 30px 30px;
-  opacity: 0.12;
-  pointer-events: none;
+position: absolute;
+inset: 0;
+z-index: 1;
+background-image: radial-gradient(var(--text-muted) 1px, transparent 1px);
+background-size: 30px 30px;
+opacity: 0.12;
+pointer-events: none;
 }
 
 .bg-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  z-index: 0;
-  opacity: 0.5;
-  animation: float 15s ease-in-out infinite alternate;
+position: absolute;
+border-radius: 50%;
+filter: blur(100px);
+z-index: 0;
+opacity: 0.5;
+animation: float 15s ease-in-out infinite alternate;
 }
 .bg-orb-1 { width: 50vw; height: 50vw; background: var(--btn-primary-from); top: -20%; left: -10%; }
 .bg-orb-2 { width: 40vw; height: 40vw; background: var(--btn-primary-to); bottom: -10%; right: -10%; animation-delay: -5s; }
 
 @keyframes float {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(10%, 15%) scale(1.1); }
+0% { transform: translate(0, 0) scale(1); }
+100% { transform: translate(10%, 15%) scale(1.1); }
 }
 
 .intro-card {
-  padding: 50px 45px;
-  border-radius: 24px;
-  text-align: center;
-  max-width: 520px;
-  width: 90%;
-  z-index: 10;
-  animation: fadeUp 0.6s ease-out forwards;
+padding: 50px 45px;
+border-radius: 24px;
+text-align: center;
+max-width: 520px;
+width: 90%;
+z-index: 10;
+animation: fadeUp 0.6s ease-out forwards;
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
 }
 
 .intro-card h1 {
-  font-size: 38px;
-  font-weight: 600;
-  letter-spacing: -1px;
-  margin-bottom: 12px;
-  color: var(--text-main);
+font-size: 38px;
+font-weight: 600;
+letter-spacing: -1px;
+margin-bottom: 12px;
+color: var(--text-main);
 }
 
 .intro-card p {
-  color: var(--text-muted);
-  font-size: 15px;
-  margin-bottom: 35px;
-  line-height: 1.6;
+color: var(--text-muted);
+font-size: 15px;
+margin-bottom: 35px;
+line-height: 1.6;
 }
 
 /* FOOTER ALANI */
 .footer-credit {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 400;
-  z-index: 10;
-  letter-spacing: 0.5px;
+position: absolute;
+bottom: 24px;
+left: 50%;
+transform: translateX(-50%);
+color: var(--text-muted);
+font-size: 13px;
+font-weight: 400;
+z-index: 10;
+letter-spacing: 0.5px;
 }
 .footer-credit a {
-  color: var(--btn-primary-from);
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s;
+color: var(--btn-primary-from);
+text-decoration: none;
+font-weight: 600;
+transition: all 0.3s;
 }
 .footer-credit a:hover {
-  text-decoration: underline;
-  text-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+text-decoration: underline;
+text-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
 }
 
 /* BUTONLAR */
 .buttons {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  flex-wrap: wrap;
+display: flex;
+gap: 16px;
+justify-content: center;
+flex-wrap: wrap;
 }
 
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+padding: 12px 24px;
+font-size: 14px;
+font-weight: 500;
+border: none;
+border-radius: 12px;
+cursor: pointer;
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .btn:hover { transform: translateY(-2px); }
 .btn:active { transform: translateY(0); }
 
 .btn.primary {
-  background: linear-gradient(135deg, var(--btn-primary-from) 0%, var(--btn-primary-to) 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+background: linear-gradient(135deg, var(--btn-primary-from) 0%, var(--btn-primary-to) 100%);
+color: white;
+box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 .btn.primary:hover { box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4); }
 
 .btn.secondary {
-  background-color: var(--input-bg);
-  color: var(--text-main);
-  border: 1px solid var(--input-border);
+background-color: var(--input-bg);
+color: var(--text-main);
+border: 1px solid var(--input-border);
 }
 .btn.secondary:hover { background-color: var(--card-border); }
 
@@ -207,254 +207,283 @@ body {
 .btn.success:hover { background: #059669; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
 
 .btn-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  border: 1px solid var(--input-border);
-  background: var(--input-bg);
-  color: var(--text-main);
-  cursor: pointer;
-  transition: 0.3s;
+display: flex;
+align-items: center;
+justify-content: center;
+width: 42px;
+height: 42px;
+border-radius: 12px;
+border: 1px solid var(--input-border);
+background: var(--input-bg);
+color: var(--text-main);
+cursor: pointer;
+transition: 0.3s;
 }
 .btn-icon:hover { background: var(--card-border); transform: translateY(-2px); }
 
 /* YÜZEN KONTROL PANELİ (TOPBAR) */
 #ui-controls {
-  position: absolute;
-  top: 24px;
-  left: 24px;
-  right: 24px;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
+position: absolute;
+top: 24px;
+left: 24px;
+right: 24px;
+z-index: 100;
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+pointer-events: none;
 }
 
 .control-pill {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  padding: 8px;
-  border-radius: 16px;
-  pointer-events: auto;
+display: flex;
+gap: 8px;
+align-items: center;
+padding: 8px;
+border-radius: 16px;
+pointer-events: auto;
 }
 
 .tree-name-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
+position: relative;
+display: flex;
+align-items: center;
 }
 
 .tree-name-wrapper .edit-icon-input {
-  position: absolute;
-  right: 12px;
-  color: var(--text-muted);
-  pointer-events: none;
-  opacity: 0.6;
+position: absolute;
+right: 12px;
+color: var(--text-muted);
+pointer-events: none;
+opacity: 0.6;
 }
 
 .tree-name {
-  background: transparent;
-  border: none;
-  color: var(--text-main);
-  font-size: 16px;
-  font-weight: 600;
-  outline: none;
-  width: 220px;
-  padding: 6px 36px 6px 12px;
-  border-radius: 8px;
-  transition: 0.3s;
+background: transparent;
+border: none;
+color: var(--text-main);
+font-size: 16px;
+font-weight: 600;
+outline: none;
+width: 220px;
+padding: 6px 36px 6px 12px;
+border-radius: 8px;
+transition: 0.3s;
 }
 .tree-name:focus { background: var(--input-bg); }
 
+.save-btn {
+padding: 8px 16px;
+border-radius: 12px;
+}
+
 /* KİŞİ KARTLARI */
 .person-card {
-  width: 190px;
-  border-radius: 18px;
-  padding: 16px;
-  text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+width: 190px;
+border-radius: 18px;
+padding: 16px;
+text-align: center;
+transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .person-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--btn-primary-from);
-  box-shadow: 0 15px 35px var(--shadow-color), 0 0 15px rgba(59, 130, 246, 0.15);
+transform: translateY(-2px);
+border-color: var(--btn-primary-from);
+box-shadow: 0 15px 35px var(--shadow-color), 0 0 15px rgba(59, 130, 246, 0.15);
 }
 
 .person-card h3 {
-  font-size: 15px;
-  font-weight: 600;
-  margin: 6px 0 2px 0;
-  color: var(--text-main);
+font-size: 15px;
+font-weight: 600;
+margin: 6px 0 2px 0;
+color: var(--text-main);
 }
 
 .card-date { font-size: 11px; color: var(--text-muted); font-weight: 500; }
 .card-place { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
 .card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+display: flex;
+justify-content: space-between;
+align-items: center;
 }
 
 .header-actions { display: flex; gap: 4px; }
 
 .action-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
+background: transparent;
+border: none;
+color: var(--text-muted);
+cursor: pointer;
+padding: 4px;
+border-radius: 6px;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.2s ease;
 }
 
 .action-btn.edit:hover { color: var(--btn-primary-from); background: var(--input-bg); }
 .action-btn.delete:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
 
 .info-wrapper {
-  color: var(--btn-primary-from);
-  cursor: help;
-  position: relative;
-  display: flex;
-  align-items: center;
+color: var(--btn-primary-from);
+cursor: help;
+position: relative;
+display: flex;
+align-items: center;
 }
 
 .gender-indicator {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-right: 6px;
+display: inline-block;
+width: 8px;
+height: 8px;
+border-radius: 50%;
+margin-right: 6px;
 }
 .gender-M { background-color: #3b82f6; }
 .gender-F { background-color: #ec4899; }
 
-/* ==========================================
-   ARTI (+) MENÜSÜ VE GÖRÜNMEZ KÖPRÜ (BRIDGE)
-   ========================================== */
+/* ARTI (+) MENÜSÜ VE GÖRÜNMEZ KÖPRÜ (BRIDGE) */
 .node-plus-menu {
-  position: absolute;
-  top: -14px;
-  right: -14px;
-  z-index: 20;
+position: absolute;
+top: -14px;
+right: -14px;
+z-index: 20;
 }
 
 .plus-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--btn-primary-from), var(--btn-primary-to));
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s;
+width: 34px;
+height: 34px;
+border-radius: 50%;
+background: linear-gradient(135deg, var(--btn-primary-from), var(--btn-primary-to));
+color: white;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s;
 }
 
 .node-plus-menu:hover .plus-btn {
-  transform: scale(1.15);
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
+transform: scale(1.15);
+box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
 }
 
-/* Görünmez Köprü (padding-left) alanı */
 .plus-options {
-  position: absolute;
-  top: -10px;
-  left: 100%;
-  padding-left: 14px; /* FAREYİ TUTAN KÖPRÜ BURASI */
-  z-index: 30;
-  display: flex;
-  flex-direction: column;
-  
-  /* Animasyon Başlangıç Durumu */
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(-10px);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+position: absolute;
+top: -10px;
+left: 100%;
+padding-left: 14px;
+z-index: 30;
+display: flex;
+flex-direction: column;
+opacity: 0;
+visibility: hidden;
+transform: translateX(-10px);
+transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hover olduğunda görünür yap */
 .node-plus-menu:hover .plus-options {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(0);
+opacity: 1;
+visibility: visible;
+transform: translateX(0);
 }
 
-/* Asıl Stilize Edilmiş Menü Kutusu */
 .plus-options-inner {
-  border-radius: 12px;
-  overflow: hidden;
-  min-width: 140px;
-  display: flex;
-  flex-direction: column;
-  padding: 4px;
+border-radius: 12px;
+overflow: hidden;
+min-width: 140px;
+display: flex;
+flex-direction: column;
+padding: 4px;
 }
 
 .plus-options-inner button {
-  padding: 10px 14px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--text-main);
-  font-size: 13px;
-  font-weight: 500;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+padding: 10px 14px;
+border: none;
+border-radius: 8px;
+background: transparent;
+color: var(--text-main);
+font-size: 13px;
+font-weight: 500;
+text-align: left;
+cursor: pointer;
+transition: background 0.15s, color 0.15s;
 }
 
 .plus-options-inner button:hover {
-  background: var(--btn-primary-from);
-  color: white;
+background: var(--btn-primary-from);
+color: white;
+}
+
+/* NOT TOOLTIP GİZLİ PENCERESİ */
+.note-tooltip {
+position: absolute;
+top: 100%;
+left: 50%;
+transform: translateX(-50%);
+background: var(--text-main);
+color: var(--bg-color);
+padding: 8px 12px;
+border-radius: 8px;
+font-size: 12px;
+width: max-content;
+max-width: 200px;
+white-space: normal;
+box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+z-index: 9999;
+margin-top: 6px;
+pointer-events: none;
+}
+.note-tooltip::after {
+content: '';
+position: absolute;
+bottom: 100%;
+left: 50%;
+transform: translateX(-50%);
+border-width: 5px;
+border-style: solid;
+border-color: transparent transparent var(--text-main) transparent;
 }
 
 /* İLK DÜĞÜM EKLEME KART KUTUSU */
 .null-node-card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 32px 40px;
-  border-radius: 24px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  cursor: pointer;
-  z-index: 100 !important;
-  pointer-events: auto !important;
-  max-width: 320px;
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+padding: 32px 40px;
+border-radius: 24px;
+text-align: center;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 12px;
+cursor: pointer;
+z-index: 100 !important;
+pointer-events: auto !important;
+max-width: 320px;
+transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .null-node-card:hover {
-  transform: translate(-50%, -50%) scale(1.03);
-  border-color: var(--btn-primary-from);
-  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+transform: translate(-50%, -50%) scale(1.03);
+border-color: var(--btn-primary-from);
+box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
 }
 
 .null-node-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--btn-primary-from), var(--btn-primary-to));
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+width: 60px;
+height: 60px;
+border-radius: 50%;
+background: linear-gradient(135deg, var(--btn-primary-from), var(--btn-primary-to));
+color: white;
+display: flex;
+align-items: center;
+justify-content: center;
+box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
 }
 
 .null-node-card h3 { font-size: 18px; font-weight: 600; color: var(--text-main); }
@@ -462,332 +491,316 @@ body {
 
 /* MODAL & FORM DÜZENİ */
 .modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.65);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999 !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 20px;
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+background: rgba(0, 0, 0, 0.65);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 9999 !important;
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(8px);
+padding: 20px;
 }
 
 .modal-content {
-  width: 100%;
-  max-width: 440px;
-  border-radius: 24px;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+width: 100%;
+max-width: 440px;
+border-radius: 24px;
+padding: 30px;
+display: flex;
+flex-direction: column;
+gap: 18px;
+box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
 }
 
 .modal-content h2 {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--text-main);
-  letter-spacing: -0.5px;
+font-size: 22px;
+font-weight: 600;
+color: var(--text-main);
+letter-spacing: -0.5px;
 }
 
 .gender-toggle {
-  display: flex;
-  background: var(--input-bg);
-  padding: 4px;
-  border-radius: 12px;
-  border: 1px solid var(--input-border);
-  gap: 6px;
+display: flex;
+background: var(--input-bg);
+padding: 4px;
+border-radius: 12px;
+border: 1px solid var(--input-border);
+gap: 6px;
 }
 
 .gender-btn {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  font-weight: 600;
-  font-size: 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.25s ease;
+flex: 1;
+padding: 10px;
+border: none;
+background: transparent;
+color: var(--text-muted);
+font-weight: 600;
+font-size: 14px;
+border-radius: 8px;
+cursor: pointer;
+transition: all 0.25s ease;
 }
 
 .gender-btn.active.male {
-  background: #3b82f6;
-  color: white;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+background: #3b82f6;
+color: white;
+box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
 }
 
 .gender-btn.active.female {
-  background: #ec4899;
-  color: white;
-  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.35);
+background: #ec4899;
+color: white;
+box-shadow: 0 4px 12px rgba(236, 72, 153, 0.35);
 }
 
 .form-row { display: flex; gap: 12px; }
 
 .input-field {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+flex: 1;
+display: flex;
+flex-direction: column;
+gap: 6px;
 }
 
 .input-field label { font-size: 12px; font-weight: 500; color: var(--text-muted); }
 
 .input-field input,
 .input-field textarea {
-  width: 100%;
-  padding: 11px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--input-border);
-  background: var(--input-bg);
-  color: var(--text-main);
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+width: 100%;
+padding: 11px 14px;
+border-radius: 10px;
+border: 1px solid var(--input-border);
+background: var(--input-bg);
+color: var(--text-main);
+font-size: 14px;
+outline: none;
+transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input-field input:focus,
 .input-field textarea:focus {
-  border-color: var(--btn-primary-from);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+border-color: var(--btn-primary-from);
+box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .input-field textarea { resize: vertical; min-height: 75px; }
 
 .modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 6px;
+display: flex;
+justify-content: flex-end;
+gap: 10px;
+margin-top: 6px;
 }
 
 .react-flow__edge-path {
-  stroke: var(--tree-edge-color) !important;
-  stroke-width: 3.5px !important;
+stroke: var(--tree-edge-color) !important;
+stroke-width: 3.5px !important;
 }
 
-/* ==========================================
-   REACT FLOW MODERN KONTROLLER (ZOOM KUTUSU)
-   ========================================== */
+/* REACT FLOW MODERN KONTROLLER (ZOOM KUTUSU) */
 .react-flow__controls {
-  background: var(--card-bg) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--card-border) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 10px 30px var(--shadow-color) !important;
-  padding: 6px !important;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+background: var(--card-bg) !important;
+backdrop-filter: blur(16px);
+-webkit-backdrop-filter: blur(16px);
+border: 1px solid var(--card-border) !important;
+border-radius: 12px !important;
+box-shadow: 0 10px 30px var(--shadow-color) !important;
+padding: 6px !important;
+display: flex;
+flex-direction: column;
+gap: 6px;
 }
 .react-flow__controls button {
-  background: var(--input-bg) !important;
-  border: 1px solid var(--input-border) !important;
-  border-radius: 8px !important;
-  border-bottom: none !important;
-  fill: var(--text-main) !important;
-  transition: all 0.3s ease;
-  width: 32px !important;
-  height: 32px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+background: var(--input-bg) !important;
+border: 1px solid var(--input-border) !important;
+border-radius: 8px !important;
+border-bottom: none !important;
+fill: var(--text-main) !important;
+transition: all 0.3s ease;
+width: 32px !important;
+height: 32px !important;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 .react-flow__controls button:hover {
-  background: var(--btn-primary-from) !important;
-  fill: white !important;
+background: var(--btn-primary-from) !important;
+fill: white !important;
 }
 
-/* ==========================================
-   BAĞIMSIZ KİŞİ EKLEME BUTONU (FAB - SAĞ ALT)
-   ========================================== */
+/* BAĞIMSIZ KİŞİ EKLEME BUTONU (FAB - SAĞ ALT) */
 .fab-add-node {
-  position: absolute;
-  bottom: 32px;
-  right: 32px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--btn-primary-from), var(--btn-primary-to));
-  color: white;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-  z-index: 100;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+position: absolute;
+bottom: 32px;
+right: 32px;
+width: 56px;
+height: 56px;
+border-radius: 50%;
+background: linear-gradient(135deg, var(--btn-primary-from), var(--btn-primary-to));
+color: white;
+border: none;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+z-index: 100;
+transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
 }
 
 .fab-add-node:hover {
-  transform: scale(1.1) translateY(-5px);
-  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6);
+transform: scale(1.1) translateY(-5px);
+box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6);
+}
+
+/* ÖĞRETİCİ (TUTORIAL) STİLLERİ */
+.tutorial-overlay {
+position: fixed;
+bottom: 40px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 9999;
+width: 90%;
+max-width: 380px;
+animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes slideUp {
+from { opacity: 0; transform: translate(-50%, 20px); }
+to { opacity: 1; transform: translate(-50%, 0); }
+}
+.tutorial-card {
+padding: 24px;
+border-radius: 20px;
+text-align: center;
+position: relative;
+box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2) !important;
+}
+.tutorial-close {
+position: absolute;
+top: 14px;
+right: 14px;
+background: transparent;
+border: none;
+color: var(--text-muted);
+cursor: pointer;
+transition: color 0.2s;
+}
+.tutorial-close:hover { color: #ef4444; }
+.tutorial-icon-wrapper {
+width: 64px;
+height: 64px;
+border-radius: 50%;
+background: var(--input-bg);
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 0 auto 16px auto;
+box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+.tutorial-card h3 {
+font-size: 18px;
+font-weight: 600;
+color: var(--text-main);
+margin-bottom: 8px;
+}
+.tutorial-card p {
+font-size: 13px;
+color: var(--text-muted);
+line-height: 1.5;
+margin-bottom: 24px;
+}
+.tutorial-footer {
+display: flex;
+justify-content: space-between;
+align-items: center;
+border-top: 1px solid var(--input-border);
+padding-top: 16px;
+}
+.tutorial-step {
+font-size: 13px;
+font-weight: 600;
+color: var(--text-muted);
+background: var(--input-bg);
+padding: 4px 10px;
+border-radius: 12px;
+}
+.tutorial-actions {
+display: flex;
+gap: 8px;
 }
 
 /* ==========================================
-   MOBİL (RESPONSIVE) TASARIM KURALLARI
-   ========================================== */
+MOBİL (RESPONSIVE) - ÜST ÜSTE BİNMEYİ ÖNLEYEN DÜZEN
+========================================== /
 @media (max-width: 768px) {
-  /* Üst Bar (TopBar) Mobil Düzeni */
-  .fab-add-node {
-    bottom: 24px;
-    right: 24px;
-    width: 48px;
-    height: 48px;
-  }
-  
-  #ui-controls {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-  .control-pill {
-    width: 100%;
-    justify-content: center;
-  }
-  .tree-name {
-    width: 100%;
-    min-width: 150px;
-  }
-  /* Butonlardaki uzun yazıları gizle, sadece ikon kalsın */
-  .save-text, .lang-text {
-    display: none;
-  }
-  
-  /* Giriş Ekranı Mobil */
-  .intro-card {
-    padding: 30px 25px;
-  }
-  .intro-card h1 {
-    font-size: 28px;
-  }
-  .intro-card p {
-    font-size: 14px;
-  }
-  
-  /* Modallar Mobil */
-  .modal-content {
-    padding: 24px 20px;
-    margin: 15px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  
-  /* Düğüm Plus Menüsü Mobilde Daha Kolay Tıklanır */
-  .plus-options {
-    padding-left: 10px;
-  }
-  .plus-options-inner button {
-    padding: 12px 14px; /* Mobilde parmakla daha kolay tıklanır */
-  }
-}
-
-/* ==========================================
-   ÜST BAR (TOPBAR) MASAÜSTÜ DÜZENİ
-   ========================================== */
+/ Üst bar mobilde tek satır olur, yazılar gizlenir */
 #ui-controls {
-  position: absolute;
-  top: 24px;
-  left: 24px;
-  right: 24px;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  pointer-events: none;
+flex-direction: row;
+align-items: center;
+gap: 8px;
+top: 16px;
+left: 16px;
+right: 16px;
 }
-.right-controls-wrapper {
-  display: flex;
-  gap: 12px;
+.pill-name {
+flex: 1;
+min-width: 0;
 }
-
-/* ==========================================
-   NOT TOOLTIP GİZLİ PENCERESİ
-   ========================================== */
-.note-tooltip {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--text-main);
-  color: var(--bg-color);
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  width: max-content;
-  max-width: 200px;
-  white-space: normal;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  z-index: 9999;
-  margin-top: 6px;
-  pointer-events: none; /* Farenin tooltip üstüne takılmasını engeller */
+.tree-name {
+width: 100%;
+min-width: 0;
 }
-/* Tooltip yönlendirme oku (Opsiyonel küçük üçgen) */
-.note-tooltip::after {
-  content: '';
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent var(--text-main) transparent;
+.pill-actions {
+width: auto;
+gap: 4px;
 }
 
-/* ==========================================
-   MOBİL (RESPONSIVE) KESİN TASARIM EKLENTİSİ
-   ========================================== */
-@media (max-width: 768px) {
-  #ui-controls {
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .pill-name {
-    width: 100%; /* İsim kutusu tam genişlik */
-    justify-content: center;
-  }
-  
-  .right-controls-wrapper {
-    width: 100%;
-    justify-content: space-between; /* Sol altta dil, sağ altta diğerleri */
-  }
-  
-  .save-text, .lang-text {
-    display: none; /* Mobilde sadece ikon kalsın */
-  }
-  
-  .intro-card {
-    padding: 30px 25px;
-  }
-  .intro-card h1 {
-    font-size: 28px;
-  }
-  .modal-content {
-    padding: 24px 20px;
-    margin: 15px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .plus-options {
-    padding-left: 10px;
-  }
-  .plus-options-inner button {
-    padding: 12px 14px;
-  }
-  .fab-add-node {
-    bottom: 24px;
-    right: 24px;
-    width: 48px;
-    height: 48px;
-  }
+/* Yazıları gizle ve Butonları Kare (Sadece İkon) Yap */
+.lang-text, .save-text {
+display: none !important;
+}
+.btn.primary.save-btn {
+padding: 8px !important;
+border-radius: 12px;
+}
+.pill-actions .btn-icon {
+padding: 8px !important;
+}
+
+.intro-card {
+padding: 30px 25px;
+}
+.intro-card h1 {
+font-size: 28px;
+}
+
+.modal-content {
+padding: 24px 20px;
+margin: 15px;
+max-height: 90vh;
+overflow-y: auto;
+}
+
+.plus-options {
+padding-left: 10px;
+}
+.plus-options-inner button {
+padding: 12px 14px;
+}
+
+.fab-add-node {
+bottom: 24px;
+right: 24px;
+width: 48px;
+height: 48px;
+}
+
+.tutorial-overlay {
+bottom: 24px;
+}
 }
