@@ -13,7 +13,15 @@ interface TreeState {
   selectedNodeId: string | null;
   relationType: 'parent' | 'child' | 'partner' | null;
   previewImageUrl: string;
-  rfInstance: any; // Fotoğraf çekiminde Zoom ayarı için eklendi
+  rfInstance: any;
+  
+  // ÖĞRETİCİ (TUTORIAL) STATE'LERİ
+  isTutorialActive: boolean;
+  tutorialStep: number;
+  startTutorial: () => void;
+  nextTutorialStep: () => void;
+  prevTutorialStep: () => void;
+  skipTutorial: () => void;
   
   setLanguage: (lang: 'tr' | 'en') => void;
   setDarkTheme: (isDark: boolean) => void;
@@ -49,6 +57,13 @@ export const useTreeStore = create<TreeState>((set, get) => ({
   relationType: null,
   previewImageUrl: '',
   rfInstance: null,
+
+  isTutorialActive: false,
+  tutorialStep: 1,
+  startTutorial: () => set({ isTutorialActive: true, tutorialStep: 1 }),
+  nextTutorialStep: () => set((state) => ({ tutorialStep: Math.min(state.tutorialStep + 1, 6) })),
+  prevTutorialStep: () => set((state) => ({ tutorialStep: Math.max(state.tutorialStep - 1, 1) })),
+  skipTutorial: () => set({ isTutorialActive: false }),
 
   setLanguage: (lang) => set({ language: lang }),
   setDarkTheme: (isDarkTheme) => set({ isDarkTheme }),
@@ -120,7 +135,6 @@ export const useTreeStore = create<TreeState>((set, get) => ({
     let newEdges = [...edges];
     const isPartner = sourceHandle === 'right' || sourceHandle === 'left' || targetHandle === 'left' || targetHandle === 'right';
     
-    // AYNI CİNSİYET EŞ KONTROLÜ
     if (isPartner) {
       const sNode = nodes.find(n => n.id === source);
       const tNode = nodes.find(n => n.id === target);
@@ -152,5 +166,5 @@ export const useTreeStore = create<TreeState>((set, get) => ({
   },
   
   loadFromJSON: (data) => set({ nodes: data.nodes || [], edges: data.edges || [], treeName: data.treeName || '', isTreeActive: true }),
-  resetTree: () => set({ nodes: [], edges: [], treeName: '', isTreeActive: false })
+  resetTree: () => set({ nodes: [], edges: [], treeName: '', isTreeActive: false, isTutorialActive: false })
 }));
