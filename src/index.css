@@ -690,3 +690,104 @@ body {
     padding: 12px 14px; /* Mobilde parmakla daha kolay tıklanır */
   }
 }
+
+/* ==========================================
+   ÜST BAR (TOPBAR) MASAÜSTÜ DÜZENİ
+   ========================================== */
+#ui-controls {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+}
+.right-controls-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+/* ==========================================
+   NOT TOOLTIP GİZLİ PENCERESİ
+   ========================================== */
+.note-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-main);
+  color: var(--bg-color);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  width: max-content;
+  max-width: 200px;
+  white-space: normal;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  z-index: 9999;
+  margin-top: 6px;
+  pointer-events: none; /* Farenin tooltip üstüne takılmasını engeller */
+}
+/* Tooltip yönlendirme oku (Opsiyonel küçük üçgen) */
+.note-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent var(--text-main) transparent;
+}
+
+/* ==========================================
+   MOBİL (RESPONSIVE) KESİN TASARIM EKLENTİSİ
+   ========================================== */
+@media (max-width: 768px) {
+  #ui-controls {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .pill-name {
+    width: 100%; /* İsim kutusu tam genişlik */
+    justify-content: center;
+  }
+  
+  .right-controls-wrapper {
+    width: 100%;
+    justify-content: space-between; /* Sol altta dil, sağ altta diğerleri */
+  }
+  
+  .save-text, .lang-text {
+    display: none; /* Mobilde sadece ikon kalsın */
+  }
+  
+  .intro-card {
+    padding: 30px 25px;
+  }
+  .intro-card h1 {
+    font-size: 28px;
+  }
+  .modal-content {
+    padding: 24px 20px;
+    margin: 15px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .plus-options {
+    padding-left: 10px;
+  }
+  .plus-options-inner button {
+    padding: 12px 14px;
+  }
+  .fab-add-node {
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+  }
+}
