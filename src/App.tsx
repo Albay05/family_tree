@@ -6,6 +6,7 @@ import IntroScreen from './components/IntroScreen';
 import PersonNodeComponent from './components/PersonNode';
 import TopBar from './components/TopBar';
 import ModalManager from './components/ModalManager';
+import Tutorial from './components/Tutorial'; // ÖĞRETİCİ İÇE AKTARILDI
 import { Plus, UserPlus } from 'lucide-react';
 
 const nodeTypes = { person: PersonNodeComponent };
@@ -60,6 +61,7 @@ export default function App() {
         </button>
       )}
 
+      <Tutorial />
       <ModalManager />
     </div>
   );
